@@ -9,7 +9,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace GridFSServer.Implementation
 {
-    internal sealed class StreamBasedHttpFileServer : Components.IHttpFileServer
+    internal sealed class HttpFileServer : Components.IHttpFileServer
     {
         private readonly Components.IFileSourceResolver _fileSourceResolver;
 
@@ -18,7 +18,7 @@ namespace GridFSServer.Implementation
         private readonly IOptionsMonitor<Components.HttpServerOptions> _optionsSource;
 
         // IOptionsMonitor<> is used instead of IOptionsSnapshot<> injection to improve performance and prevent memory leaks
-        public StreamBasedHttpFileServer(Components.IFileSourceResolver fileSourceResolver, IContentTypeProvider contentTypeProvider, IOptionsMonitor<Components.HttpServerOptions> optionsSource)
+        public HttpFileServer(Components.IFileSourceResolver fileSourceResolver, IContentTypeProvider contentTypeProvider, IOptionsMonitor<Components.HttpServerOptions> optionsSource)
         {
             _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
             _contentTypeProvider = contentTypeProvider ?? throw new ArgumentNullException(nameof(contentTypeProvider));

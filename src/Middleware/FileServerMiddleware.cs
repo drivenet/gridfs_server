@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace GridFSServer.Middleware
 {
-    internal sealed class HttpFileServerMiddleware
+    internal sealed class FileServerMiddleware
     {
         private readonly RequestDelegate _next;
 
         private readonly Components.IHttpFileServer _fileServer;
 
-        public HttpFileServerMiddleware(RequestDelegate next, Components.IHttpFileServer fileServer)
+        public FileServerMiddleware(RequestDelegate next, Components.IHttpFileServer fileServer)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _fileServer = fileServer ?? throw new ArgumentNullException(nameof(fileServer));

@@ -36,7 +36,7 @@ namespace GridFSServer.Composition
             services.AddSingleton<Components.IFileSourceResolver>(provider =>
                 provider.GetRequiredService<Implementation.DefaultGridFSFileSourceResolver>());
             services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
-            services.AddSingleton<Components.IHttpFileServer, Implementation.StreamBasedHttpFileServer>();
+            services.AddSingleton<Components.IHttpFileServer, Implementation.HttpFileServer>();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -55,7 +55,7 @@ namespace GridFSServer.Composition
             }
 
             app.UseMiddleware<Middleware.StatisticsMiddleware>();
-            app.UseMiddleware<Middleware.HttpFileServerMiddleware>();
+            app.UseMiddleware<Middleware.FileServerMiddleware>();
         }
     }
 }
