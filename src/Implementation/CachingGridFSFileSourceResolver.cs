@@ -37,14 +37,14 @@ namespace GridFSServer.Implementation
                 }
             }
 
-            return _cache.GetOrAdd(url, _cacheFactory).GetValue();
+            return _cache.GetOrAdd(url, _cacheFactory).Value;
         }
 
         private void CleanCache(MongoUrl key)
         {
             foreach (var pair in _cache)
             {
-                if (pair.Key != key && pair.Value.Reset())
+                if (pair.Key != key && pair.Value.ResetRefs())
                 {
                     _cache.TryRemove(pair.Key, out _);
                 }
@@ -58,21 +58,32 @@ namespace GridFSServer.Implementation
         {
             private readonly Lazy<Components.IFileSource> _value;
 
-            private long _refs;
+            private bool _hasRefs;
 
             public CacheEntry(Func<Components.IFileSource> valueFactory)
             {
                 _value = new Lazy<Components.IFileSource>(valueFactory);
             }
 
-            public Components.IFileSource GetValue()
+            public Components.IFileSource Value
             {
-                Interlocked.Increment(ref _refs);
-                return _value.Value;
+                get
+                {
+                    _hasRefs = true;
+                    return _value.Value;
+                }
             }
 
-            public bool Reset()
-                => Interlocked.Exchange(ref _refs, 0) == 0;
+            public bool ResetRefs()
+            {
+                if (_hasRefs)
+                {
+                    _hasRefs = false;
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
 }
