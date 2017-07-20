@@ -21,6 +21,11 @@ namespace GridFSServer.Implementation
 
         public async Task<Components.IFileInfo> FetchFile(string filename, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return null;
+            }
+
             var stream = await _errorHandler.HandleErrors(
                 () => FetchStream(filename, cancellationToken),
                 filename,
