@@ -29,7 +29,7 @@ namespace GridFSServer.Implementation
             var nextTime = _nextTime;
             if (time > nextTime)
             {
-                const int CacheCleanIntervalSeconds = 300;
+                const int CacheCleanIntervalSeconds = 59;
                 time += Stopwatch.Frequency * CacheCleanIntervalSeconds;
                 if (Interlocked.CompareExchange(ref _nextTime, time, nextTime) == nextTime)
                 {
