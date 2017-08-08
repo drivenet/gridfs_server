@@ -31,15 +31,14 @@ namespace GridFSServer.Middleware
                 return;
             }
 
-            var cancellationToken = httpContext.RequestAborted;
             try
             {
-                if (await _fileServer.TryServeFile(httpContext, serveContent, cancellationToken).ConfigureAwait(false))
+                if (await _fileServer.TryServeFile(httpContext, serveContent, httpContext.RequestAborted).ConfigureAwait(false))
                 {
                     return;
                 }
             }
-            catch (OperationCanceledException exception) when (exception.CancellationToken == cancellationToken)
+            catch (OperationCanceledException)
             {
                 httpContext.Response.StatusCode = (int)HttpStatusCode.RequestTimeout;
                 return;
