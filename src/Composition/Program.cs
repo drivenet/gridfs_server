@@ -2,7 +2,6 @@
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -71,7 +70,6 @@ namespace GridFSServer.Composition
                 throw new ArgumentNullException(nameof(options));
             }
 
-            options.ApplicationSchedulingMode = SchedulingMode.Inline;
             options.AddServerHeader = false;
             options.Limits.MaxRequestBodySize = 0;
             options.Limits.MaxRequestHeadersTotalSize = 16384;
