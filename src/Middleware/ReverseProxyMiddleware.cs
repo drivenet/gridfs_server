@@ -62,7 +62,7 @@ namespace GridFSServer.Middleware
 
         private static void UpdateServerPort(HttpContext httpContext, IHttpConnectionFeature connectionFeature)
         {
-            if (httpContext.Request.Headers.TryGetValue("X-Server-Port", out var header)
+            if (httpContext.Request.Headers.TryGetValue("X-Forwarded-Port", out var header)
                 && header.Count == 1
                 && ushort.TryParse(header[0], NumberStyles.None, NumberFormatInfo.InvariantInfo, out var port)
                 && port != 0)
