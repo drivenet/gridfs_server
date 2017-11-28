@@ -79,12 +79,10 @@ namespace GridFSServer.Middleware
             {
                 switch (header[0])
                 {
-                    case "h2c":
                     case "http":
                         requestFeature.Scheme = "http";
                         break;
 
-                    case "h2":
                     case "https":
                         requestFeature.Scheme = "https";
                         break;
