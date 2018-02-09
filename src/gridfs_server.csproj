@@ -20,8 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="2.3.0-beta1" />
-    <PackageReference Include="Microsoft.NetCore.Analyzers" Version="2.3.0-beta1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.1" />

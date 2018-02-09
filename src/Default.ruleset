@@ -1,22 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="gridfs_server" Description="The default rule set." ToolsVersion="10.0">
+<RuleSet Name="Default" Description="The default rule set." ToolsVersion="10.0">
+  <RuleHintPaths>
+    <Path>..\Dnet.CA\bin\Integration\net45</Path>
+  </RuleHintPaths>
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1000" Action="None" />
     <Rule Id="CA1002" Action="None" />
     <Rule Id="CA1006" Action="None" />
+    <Rule Id="CA1009" Action="None" />
     <Rule Id="CA1020" Action="None" />
     <Rule Id="CA1021" Action="None" />
     <Rule Id="CA1026" Action="None" />
     <Rule Id="CA1028" Action="None" />
     <Rule Id="CA1057" Action="None" />
+    <Rule Id="CA1402" Action="None" />
     <Rule Id="CA1405" Action="None" />
     <Rule Id="CA1702" Action="None" />
+    <Rule Id="CA1703" Action="None" />
     <Rule Id="CA1704" Action="None" />
+    <Rule Id="CA1709" Action="None" />
     <Rule Id="CA1711" Action="None" />
     <Rule Id="CA1726" Action="None" />
+    <Rule Id="CA1812" Action="None" />
+    <Rule Id="CA2104" Action="None" />
     <Rule Id="CA2204" Action="None" />
     <Rule Id="CA2210" Action="None" />
+    <Rule Id="CA2224" Action="None" />
     <Rule Id="CA2233" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
@@ -24,10 +34,13 @@
     <Rule Id="CA1012" Action="Warning" />
     <Rule Id="CA1024" Action="Warning" />
     <Rule Id="CA1027" Action="Warning" />
+    <Rule Id="CA1033" Action="Warning" />
+    <Rule Id="CA1036" Action="Info" />
     <Rule Id="CA1050" Action="Warning" />
+    <Rule Id="CA1060" Action="Warning" />
+    <Rule Id="CA1063" Action="Warning" />
     <Rule Id="CA1708" Action="Warning" />
     <Rule Id="CA1725" Action="Warning" />
-    <Rule Id="CA1812" Action="None" />
     <Rule Id="CA1822" Action="Warning" />
     <Rule Id="CA1819" Action="Warning" />
     <Rule Id="CA2217" Action="Warning" />
@@ -55,16 +68,19 @@
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
     <Rule Id="CA1813" Action="Warning" />
     <Rule Id="CA1820" Action="Warning" />
+    <Rule Id="CA2208" Action="Info" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
-    <Rule Id="CA1309" Action="Warning" />
+    <Rule Id="CA1309" Action="Info" />
     <Rule Id="CA1414" Action="Warning" />
     <Rule Id="CA2201" Action="Warning" />
     <Rule Id="CA2205" Action="Warning" />
     <Rule Id="CA2215" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1200" Action="None" />
     <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1404" Action="Info" />
     <Rule Id="SA1412" Action="Warning" />
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1634" Action="None" />
@@ -83,5 +99,9 @@
     <Rule Id="SA1615" Action="None" />
     <Rule Id="SA1611" Action="None" />
     <Rule Id="SA1618" Action="None" />
+    <Rule Id="SA1625" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="DN1806" Action="Error" />
   </Rules>
 </RuleSet>
