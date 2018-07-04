@@ -47,6 +47,7 @@ namespace GridFSServer.Composition
                 .UseSetting(WebHostDefaults.ServerUrlsKey, hostingOptions?.Listen)
                 .ConfigureLogging(ConfigureLogging)
                 .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
+                .UseLibuv()
                 .ConfigureServices(services => services.AddSingleton(appConfiguration))
                 .UseStartup<Startup>()
                 .Build();
