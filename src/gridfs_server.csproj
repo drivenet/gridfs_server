@@ -7,7 +7,7 @@
     <Product>GridFS server</Product>
     <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
     <Description>-</Description>
-    <Version>1.4.2</Version>
+    <Version>1.4.3</Version>
     <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>gridfs_server</AssemblyName>
     <Authors>DRIVE.NET, Inc.</Authors>

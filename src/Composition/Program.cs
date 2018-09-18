@@ -60,7 +60,7 @@ namespace GridFSServer.Composition
             }
 
             loggingBuilder
-                .AddConsole()
+                .AddConsole(options => options.DisableColors = true)
                 .AddFilter<ConsoleLoggerProvider>((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
         }
 
