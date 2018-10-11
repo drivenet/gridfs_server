@@ -11,7 +11,7 @@
     <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>gridfs_server</AssemblyName>
     <Authors>DRIVE.NET, Inc.</Authors>
-    <NoWarn>SA0001;SA1600</NoWarn>
+    <NoWarn>SA0001;SA1600;SA1600;SA1602</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +20,10 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.1.3" />
