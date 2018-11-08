@@ -61,7 +61,7 @@ namespace GridFSServer.Composition
 
             loggingBuilder
                 .AddConsole(options => options.DisableColors = true)
-                .AddFilter<ConsoleLoggerProvider>((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
+                .AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
         }
 
         private static void ConfigureKestrel(KestrelServerOptions options, HostingOptions hostingOptions)
