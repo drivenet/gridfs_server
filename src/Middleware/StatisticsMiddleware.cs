@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
@@ -10,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GridFSServer.Middleware
 {
-    internal sealed class StatisticsMiddleware
+    internal sealed class StatisticsMiddleware : IDisposable
     {
         private const int MinCode = 100;
 
@@ -18,18 +17,28 @@ namespace GridFSServer.Middleware
 
         private const int CodeRange = MaxCode + 1 - MinCode;
 
+        private static readonly TimeSpan TraceInterval = TimeSpan.FromMinutes(1);
+
+        private readonly int[] _counts = new int[CodeRange];
+
+        private readonly StringBuilder _stats = new StringBuilder();
+
         private readonly RequestDelegate _next;
 
         private readonly ILogger<StatisticsMiddleware> _logger;
 
-        private readonly int[] _counts = new int[CodeRange];
-
-        private long _nextTime;
+        private readonly Timer _timer;
 
         public StatisticsMiddleware(RequestDelegate next, ILogger<StatisticsMiddleware> logger)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _timer = new Timer(LogStatistics, null, TraceInterval, TraceInterval);
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -45,34 +54,45 @@ namespace GridFSServer.Middleware
             {
                 Interlocked.Increment(ref _counts[index]);
             }
+        }
 
-            var time = Stopwatch.GetTimestamp();
-            var nextTime = _nextTime;
-            if (time > nextTime)
+        private void LogStatistics(object u1)
+        {
+            try
             {
-                time += Stopwatch.Frequency * 60;
-                if (Interlocked.CompareExchange(ref _nextTime, time, nextTime) == nextTime && nextTime != 0)
+                LogStatistics();
+            }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
+        }
+
+        private void LogStatistics()
+        {
+            _stats.Clear();
+            for (var i = 0; i < CodeRange; i++)
+            {
+                var count = _counts[i];
+                if (count == 0)
                 {
-                    var stats = new StringBuilder();
-                    for (int i = 0; i < CodeRange; i++)
-                    {
-                        var count = _counts[i];
-                        if (count == 0)
-                        {
-                            continue;
-                        }
-
-                        if (stats.Length != 0)
-                        {
-                            stats.Append(' ');
-                        }
-
-                        stats.AppendFormat(CultureInfo.InvariantCulture, "code{0}={1}", i + MinCode, count);
-                        Interlocked.Add(ref _counts[i], -count);
-                    }
-
-                    _logger.LogTrace(stats.ToString());
+                    continue;
                 }
+
+                if (_stats.Length != 0)
+                {
+                    _stats.Append(' ');
+                }
+
+                _stats.AppendFormat(CultureInfo.InvariantCulture, "code{0}={1}", i + MinCode, count);
+                Interlocked.Add(ref _counts[i], -count);
+            }
+
+            if (_stats.Length != 0)
+            {
+                _logger.LogTrace(_stats.ToString());
             }
         }
     }
