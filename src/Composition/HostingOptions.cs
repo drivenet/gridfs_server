@@ -20,5 +20,7 @@
         }
 
         public ushort MaxConcurrentConnections { get; set; }
+
+        public bool ForceConsoleLogging { get; set; }
     }
 }

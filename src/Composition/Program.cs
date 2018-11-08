@@ -44,26 +44,33 @@ namespace GridFSServer.Composition
         private static IWebHost BuildWebHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
             => new WebHostBuilder()
                 .UseSetting(WebHostDefaults.ServerUrlsKey, hostingOptions?.Listen)
-                .ConfigureLogging(ConfigureLogging)
+                .ConfigureLogging(loggingBuilder => ConfigureLogging(loggingBuilder, hostingOptions))
                 .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
                 .UseLibuv()
                 .ConfigureServices(services => services.AddSingleton(appConfiguration))
                 .UseStartup<Startup>()
                 .Build();
 
-        private static void ConfigureLogging(ILoggingBuilder loggingBuilder)
+        private static void ConfigureLogging(ILoggingBuilder loggingBuilder, HostingOptions hostingOptions)
         {
             if (loggingBuilder == null)
             {
                 throw new ArgumentNullException(nameof(loggingBuilder));
             }
 
+            if (hostingOptions == null)
+            {
+                throw new ArgumentNullException(nameof(hostingOptions));
+            }
+
             loggingBuilder.AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
-            if (Tmds.Systemd.Journal.IsSupported)
+            var hasJournalD = Tmds.Systemd.Journal.IsSupported;
+            if (hasJournalD)
             {
                 loggingBuilder.AddJournal(options => options.SyslogIdentifier = "gridfs-server");
             }
-            else
+
+            if (!hasJournalD || hostingOptions.ForceConsoleLogging)
             {
                 loggingBuilder.AddConsole(options => options.DisableColors = true);
             }
