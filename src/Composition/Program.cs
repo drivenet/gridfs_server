@@ -58,9 +58,15 @@ namespace GridFSServer.Composition
                 throw new ArgumentNullException(nameof(loggingBuilder));
             }
 
-            loggingBuilder
-                .AddConsole(options => options.DisableColors = true)
-                .AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
+            loggingBuilder.AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
+            if (Tmds.Systemd.ServiceManager.IsRunningAsService)
+            {
+                loggingBuilder.AddJournal(options => options.SyslogIdentifier = "gridfs-server");
+            }
+            else
+            {
+                loggingBuilder.AddConsole(options => options.DisableColors = true);
+            }
         }
 
         private static void ConfigureKestrel(KestrelServerOptions options, HostingOptions hostingOptions)
