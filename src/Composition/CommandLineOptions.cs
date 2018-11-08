@@ -14,7 +14,7 @@
 
         public string HostingConfig
         {
-            get => string.IsNullOrWhiteSpace(_hostingConfig) ? "hostingsettings.json" : _config;
+            get => string.IsNullOrWhiteSpace(_hostingConfig) ? "hostingsettings.json" : _hostingConfig;
             set => _hostingConfig = value;
         }
     }
