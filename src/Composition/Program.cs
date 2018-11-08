@@ -59,7 +59,7 @@ namespace GridFSServer.Composition
             }
 
             loggingBuilder.AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
-            if (Tmds.Systemd.ServiceManager.IsRunningAsService)
+            if (Tmds.Systemd.Journal.IsSupported)
             {
                 loggingBuilder.AddJournal(options => options.SyslogIdentifier = "gridfs-server");
             }
