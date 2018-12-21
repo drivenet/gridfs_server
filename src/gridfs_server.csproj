@@ -11,7 +11,6 @@
     <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>gridfs_server</AssemblyName>
     <Authors>DRIVE.NET, Inc.</Authors>
-    <NoWarn>SA0001;SA1600;SA1600;SA1602</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
