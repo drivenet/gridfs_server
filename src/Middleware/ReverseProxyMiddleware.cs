@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace GridFSServer.Middleware
 {
@@ -25,96 +24,86 @@ namespace GridFSServer.Middleware
                 throw new ArgumentNullException(nameof(httpContext));
             }
 
-            var requestIdentifierFeature = httpContext.Features.Get<IHttpRequestIdentifierFeature>();
-            if (requestIdentifierFeature != null)
-            {
-                UpdateRequestId(httpContext, requestIdentifierFeature);
-            }
-
-            var connectionFeature = httpContext.Features.Get<IHttpConnectionFeature>();
-            if (connectionFeature != null)
-            {
-                UpdateRemoteIpAddress(httpContext, connectionFeature);
-                UpdateServerPort(httpContext, connectionFeature);
-                UpdateConnectionId(httpContext, connectionFeature);
-            }
-
-            var requestFeature = httpContext.Features.Get<IHttpRequestFeature>();
-            if (requestFeature != null)
-            {
-                UpdateScheme(httpContext, requestFeature);
-            }
+            UpdateRequestId(httpContext);
+            UpdateRemoteIpAddress(httpContext);
+            UpdateServerPort(httpContext);
+            UpdateConnectionId(httpContext);
+            UpdateScheme(httpContext);
 
             return _next(httpContext);
         }
 
-        private static void UpdateRemoteIpAddress(HttpContext httpContext, IHttpConnectionFeature connectionFeature)
+        private static void UpdateRemoteIpAddress(HttpContext httpContext)
         {
             if (httpContext.Request.Headers.TryGetValue("X-Real-IP", out var header)
                 && header.Count == 1
                 && IPAddress.TryParse(header[0], out var address)
                 && (address.AddressFamily == AddressFamily.InterNetwork || address.AddressFamily == AddressFamily.InterNetworkV6))
             {
-                connectionFeature.RemoteIpAddress = address;
-                connectionFeature.RemotePort = 0;
+                var connection = httpContext.Connection;
+                connection.RemoteIpAddress = address;
+                connection.RemotePort = 0;
             }
         }
 
-        private static void UpdateServerPort(HttpContext httpContext, IHttpConnectionFeature connectionFeature)
+        private static void UpdateServerPort(HttpContext httpContext)
         {
             if (httpContext.Request.Headers.TryGetValue("X-Forwarded-Port", out var header)
                 && header.Count == 1
                 && ushort.TryParse(header[0], NumberStyles.None, NumberFormatInfo.InvariantInfo, out var port)
                 && port != 0)
             {
-                connectionFeature.LocalIpAddress = IPAddress.Any;
-                connectionFeature.LocalPort = port;
+                var connection = httpContext.Connection;
+                connection.LocalIpAddress = IPAddress.Any;
+                connection.LocalPort = port;
             }
         }
 
-        private static void UpdateScheme(HttpContext httpContext, IHttpRequestFeature requestFeature)
+        private static void UpdateScheme(HttpContext httpContext)
         {
-            if (httpContext.Request.Headers.TryGetValue("X-Forwarded-Proto", out var header)
+            var request = httpContext.Request;
+            if (request.Headers.TryGetValue("X-Forwarded-Proto", out var header)
                 && header.Count == 1)
             {
                 switch (header[0])
                 {
                     case "http":
-                        requestFeature.Scheme = "http";
+                        request.Scheme = Uri.UriSchemeHttp;
                         break;
 
                     case "https":
-                        requestFeature.Scheme = "https";
+                        request.Scheme = Uri.UriSchemeHttps;
                         break;
                 }
             }
         }
 
-        private static void UpdateConnectionId(HttpContext httpContext, IHttpConnectionFeature connectionFeature)
+        private static void UpdateConnectionId(HttpContext httpContext)
         {
             string value;
             if (httpContext.Request.Headers.TryGetValue("X-Connection-ID", out var header)
                 && header.Count == 1
                 && !string.IsNullOrWhiteSpace(value = header[0]))
             {
-                var id = connectionFeature.ConnectionId;
+                var connection = httpContext.Connection;
+                var id = connection.Id;
                 if (!string.IsNullOrWhiteSpace(id))
                 {
                     id = value + ":" + id;
                 }
 
-                connectionFeature.ConnectionId = id;
+                connection.Id = id;
             }
         }
 
-        private static void UpdateRequestId(HttpContext httpContext, IHttpRequestIdentifierFeature requestIdentifierFeature)
+        private static void UpdateRequestId(HttpContext httpContext)
         {
             string value;
             if (httpContext.Request.Headers.TryGetValue("X-Request-ID", out var header)
                 && header.Count == 1
                 && !string.IsNullOrWhiteSpace(value = header[0]))
             {
-                requestIdentifierFeature.TraceIdentifier = value;
+                httpContext.TraceIdentifier = value;
             }
         }
     }
