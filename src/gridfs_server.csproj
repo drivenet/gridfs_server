@@ -7,7 +7,7 @@
     <Product>GridFS server</Product>
     <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
     <Description>-</Description>
-    <Version>1.6.0</Version>
+    <Version>1.6.1</Version>
     <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>gridfs_server</AssemblyName>
     <Authors>DRIVE.NET, Inc.</Authors>
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.2">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
