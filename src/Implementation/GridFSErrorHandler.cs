@@ -24,7 +24,7 @@ namespace GridFSServer.Implementation
                 throw new ArgumentNullException(nameof(action));
             }
 
-            const int Attempts = 3;
+            const int Attempts = 4;
             const int DelayBetweenAttemptsMs = 1500;
             var tries = Attempts;
             while (true)
