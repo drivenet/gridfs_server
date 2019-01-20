@@ -7,7 +7,7 @@
     <Product>GridFS server</Product>
     <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
     <Description>-</Description>
-    <Version>1.6.1</Version>
+    <Version>1.6.2</Version>
     <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>gridfs_server</AssemblyName>
     <Authors>DRIVE.NET, Inc.</Authors>
@@ -19,11 +19,12 @@
 
   <ItemGroup>
     <PackageReference Include="AsyncUsageAnalyzers" Version="1.0.0-alpha003" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3">
-      <PrivateAssets>all</PrivateAssets>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta004" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0" />
@@ -37,7 +38,7 @@
     <PackageReference Include="mongodb.driver.gridfs" Version="2.7.2" />
     <PackageReference Include="System.IO.Pipelines" Version="4.5.2" />
     <PackageReference Include="System.Net.Security" Version="4.3.2" />
-    <PackageReference Include="Tmds.Systemd.Logging" Version="0.5.0" />
+    <PackageReference Include="Tmds.Systemd.Logging" Version="0.6.0" />
   </ItemGroup>
 
   <ItemGroup>

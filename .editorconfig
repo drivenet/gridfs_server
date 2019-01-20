@@ -4,6 +4,10 @@ root = true
 indent_size = 4
 indent_style = space
 insert_final_newline = true
+resharper_comment_typo_highlighting = do_not_show
+resharper_markup_attribute_typo_highlighting = do_not_show
+resharper_markup_text_typo_highlighting = do_not_show
+resharper_string_literal_typo_highlighting = do_not_show
 
 [*.{cs,cshtml,as?x}]
 charset = utf-8-bom
