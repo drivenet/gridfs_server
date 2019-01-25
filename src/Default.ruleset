@@ -37,10 +37,6 @@
     <Rule Id="CA2001" Action="Warning" />
     <Rule Id="CA2109" Action="Warning" />
   </Rules>
-  <Rules AnalyzerId="AsyncUsageAnalyzers" RuleNamespace="AsyncUsageAnalyzers">
-    <Rule Id="UseConfigureAwait" Action="None" />
-    <Rule Id="UseAsyncSuffix" Action="None" />
-  </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
     <Rule Id="CA1813" Action="Warning" />
     <Rule Id="CA1820" Action="Warning" />
