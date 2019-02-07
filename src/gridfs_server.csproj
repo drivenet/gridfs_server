@@ -7,7 +7,7 @@
     <Product>GridFS server</Product>
     <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
     <Description>-</Description>
-    <Version>1.6.2</Version>
+    <Version>1.6.3</Version>
     <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>gridfs_server</AssemblyName>
     <Authors>DRIVE.NET, Inc.</Authors>
@@ -34,8 +34,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
-    <PackageReference Include="mongodb.driver.gridfs" Version="2.7.2" />
-    <PackageReference Include="System.IO.Pipelines" Version="4.5.2" />
+    <PackageReference Include="mongodb.driver.gridfs" Version="2.7.3" />
+    <PackageReference Include="System.IO.Pipelines" Version="4.5.3" />
     <PackageReference Include="System.Net.Security" Version="4.3.2" />
     <PackageReference Include="Tmds.Systemd.Logging" Version="0.6.0" />
   </ItemGroup>
