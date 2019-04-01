@@ -62,12 +62,14 @@ namespace GridFSServer.Middleware
             {
                 LogStatistics();
             }
+#pragma warning disable CA1031 // Do not catch general exception types -- critical diagnostics path
             catch
             {
 #if DEBUG
                 throw;
 #endif
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         private void LogStatistics()

@@ -1,29 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
+  <Import Project="..\shared\Minimal.props" />
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>GridFSServer</RootNamespace>
-    <Features>IOperation</Features> 
     <Product>GridFS server</Product>
-    <Copyright>Copyright © DRIVE.NET, Inc.</Copyright>
-    <Description>-</Description>
     <Version>1.6.3</Version>
-    <CodeAnalysisRuleSet>Default.ruleset</CodeAnalysisRuleSet>
-    <AssemblyName>gridfs_server</AssemblyName>
-    <Authors>DRIVE.NET, Inc.</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="2.2.0" />
