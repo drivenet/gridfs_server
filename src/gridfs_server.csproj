@@ -3,9 +3,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeFrameworkVersion>2.2.3</RuntimeFrameworkVersion>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.6.3</Version>
+    <Version>1.6.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,10 +20,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
-    <PackageReference Include="mongodb.driver.gridfs" Version="2.7.3" />
+    <PackageReference Include="mongodb.driver.gridfs" Version="2.8.0" />
     <PackageReference Include="System.IO.Pipelines" Version="4.5.3" />
     <PackageReference Include="System.Net.Security" Version="4.3.2" />
-    <PackageReference Include="Tmds.Systemd.Logging" Version="0.6.0" />
+    <PackageReference Include="Tmds.Systemd.Logging" Version="0.6.1" />
   </ItemGroup>
 
   <ItemGroup>
