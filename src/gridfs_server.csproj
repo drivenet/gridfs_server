@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>x64</Platforms>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
     <Version>1.6.5</Version>
