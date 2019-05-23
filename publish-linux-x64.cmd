@@ -1,5 +1,5 @@
 @echo off
-rmdir /s /q src\bin\Release\netcoreapp2.2\linux-x64\publish
+rmdir /s /q src\bin\x64\Release\netcoreapp2.2\linux-x64\publish
 dotnet publish -c Release -r linux-x64 --self-contained false
 rmdir /s /q packages\gridfs_server-linux-x64
 mkdir packages\gridfs_server-linux-x64
