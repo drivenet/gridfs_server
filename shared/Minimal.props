@@ -3,6 +3,13 @@
     <DnetSharedPath Condition="'$(DnetSharedPath)' == ''">$(MSBuildThisFileDirectory)</DnetSharedPath>
   </PropertyGroup>
 
+  <PropertyGroup Label="AvailableTargetFrameworks">
+    <LegacyTargetFramework>net472</LegacyTargetFramework>
+    <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
+    <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
+    <ApplicationTargetFramework>netcoreapp2.2</ApplicationTargetFramework>
+  </PropertyGroup>
+
   <PropertyGroup Label="MinimalProjectSettings">
     <Authors>DRIVE.NET, Inc.</Authors>
     <Product>DRIVE.NET, Inc. projects</Product>
@@ -26,4 +33,13 @@
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
+
+  <Target 
+        Name="MsBuildAL1073WarningWorkaround" 
+        BeforeTargets="GenerateSatelliteAssemblies"
+        Condition="'$(PlatformTarget)' == 'x64'">
+    <PropertyGroup>
+      <TargetFrameworkSDKToolsDirectory>$(SDK40ToolsPath)x64\</TargetFrameworkSDKToolsDirectory>
+    </PropertyGroup>
+  </Target>
 </Project>
