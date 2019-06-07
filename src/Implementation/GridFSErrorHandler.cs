@@ -31,7 +31,7 @@ namespace GridFSServer.Implementation
             {
                 try
                 {
-                    return await action().ConfigureAwait(false);
+                    return await action();
                 }
                 catch (TimeoutException exception) when (tries > 1)
                 {
@@ -47,7 +47,7 @@ namespace GridFSServer.Implementation
                 }
 
                 --tries;
-                await Task.Delay(DelayBetweenAttemptsMs, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(DelayBetweenAttemptsMs, cancellationToken);
             }
         }
     }

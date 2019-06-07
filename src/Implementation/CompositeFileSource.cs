@@ -24,7 +24,7 @@ namespace GridFSServer.Implementation
                     throw new InvalidDataException(nameof(_sources));
                 }
 
-                var fileInfo = await source.FetchFile(filename, cancellationToken).ConfigureAwait(false);
+                var fileInfo = await source.FetchFile(filename, cancellationToken);
                 if (fileInfo != null)
                 {
                     return fileInfo;

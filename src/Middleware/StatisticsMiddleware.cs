@@ -48,7 +48,7 @@ namespace GridFSServer.Middleware
                 throw new ArgumentNullException(nameof(httpContext));
             }
 
-            await _next.Invoke(httpContext).ConfigureAwait(false);
+            await _next.Invoke(httpContext);
             var index = httpContext.Response.StatusCode - MinCode;
             if (index >= 0 && index < CodeRange)
             {

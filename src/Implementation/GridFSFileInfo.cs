@@ -48,7 +48,7 @@ namespace GridFSServer.Implementation
 
             if (_stream.Position != 0)
             {
-                var newStream = await _bucket.OpenDownloadStreamAsync(_stream.FileInfo.Id, null, cancellationToken).ConfigureAwait(false);
+                var newStream = await _bucket.OpenDownloadStreamAsync(_stream.FileInfo.Id, null, cancellationToken);
                 if (newStream == null)
                 {
                     return false;
@@ -66,7 +66,7 @@ namespace GridFSServer.Implementation
             var position = stream.CanSeek ? stream.Position : 0;
             try
             {
-                await _stream.CopyToAsync(stream, bufferSize, cancellationToken).ConfigureAwait(false);
+                await _stream.CopyToAsync(stream, bufferSize, cancellationToken);
             }
             catch (GridFSChunkException) when (stream.CanSeek)
             {

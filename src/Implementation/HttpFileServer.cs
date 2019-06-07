@@ -35,14 +35,14 @@ namespace GridFSServer.Implementation
             var request = httpContext.Request;
             var fileSource = _fileSourceResolver.Resolve(request.Host);
             var filename = request.Path.ToString().TrimStart('/');
-            using (var fileInfo = await fileSource.FetchFile(filename, cancellationToken).ConfigureAwait(false))
+            using (var fileInfo = await fileSource.FetchFile(filename, cancellationToken))
             {
                 if (fileInfo == null)
                 {
                     return false;
                 }
 
-                return await ServeFile(httpContext.Response, fileInfo, serveContent, cancellationToken).ConfigureAwait(false);
+                return await ServeFile(httpContext.Response, fileInfo, serveContent, cancellationToken);
             }
         }
 
@@ -59,7 +59,7 @@ namespace GridFSServer.Implementation
             }
 
             var stream = response.Body;
-            if (!await fileInfo.CopyTo(stream, cancellationToken).ConfigureAwait(false))
+            if (!await fileInfo.CopyTo(stream, cancellationToken))
             {
                 if (stream.CanSeek)
                 {

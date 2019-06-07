@@ -33,7 +33,7 @@ namespace GridFSServer.Middleware
 
             try
             {
-                if (await _fileServer.TryServeFile(httpContext, serveContent, httpContext.RequestAborted).ConfigureAwait(false))
+                if (await _fileServer.TryServeFile(httpContext, serveContent, httpContext.RequestAborted))
                 {
                     return;
                 }
@@ -44,7 +44,7 @@ namespace GridFSServer.Middleware
                 return;
             }
 
-            await _next.Invoke(httpContext).ConfigureAwait(false);
+            await _next.Invoke(httpContext);
         }
 
         private static bool CheckMethod(string method, out bool serveContent)

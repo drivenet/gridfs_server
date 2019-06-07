@@ -30,7 +30,7 @@ namespace GridFSServer.Implementation
                 () => FetchStream(filename, cancellationToken),
                 filename,
                 cancellationToken)
-                .ConfigureAwait(false);
+                ;
             if (stream == null)
             {
                 return null;
@@ -43,7 +43,7 @@ namespace GridFSServer.Implementation
         {
             try
             {
-                return await _bucket.OpenDownloadStreamByNameAsync(filename, null, cancellationToken).ConfigureAwait(false);
+                return await _bucket.OpenDownloadStreamByNameAsync(filename, null, cancellationToken);
             }
             catch (GridFSFileNotFoundException)
             {
