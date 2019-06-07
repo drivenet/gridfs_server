@@ -21,7 +21,7 @@ namespace GridFSServer.Implementation
             {
                 if (source == null)
                 {
-                    throw new InvalidDataException(nameof(_sources));
+                    throw new InvalidDataException("Null file source encountered.");
                 }
 
                 var fileInfo = await source.FetchFile(filename, cancellationToken);
