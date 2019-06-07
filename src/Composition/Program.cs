@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -10,7 +11,7 @@ namespace GridFSServer.Composition
 {
     public static class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var commandLineOptions = GetCommandLineOptions(args);
             var appConfiguration = LoadAppConfiguration(commandLineOptions.Config);
@@ -19,7 +20,7 @@ namespace GridFSServer.Composition
                 var hostingOptions = GetHostingOptions(commandLineOptions.HostingConfig);
                 using (var host = BuildWebHost(hostingOptions, appConfiguration))
                 {
-                    host.Run();
+                    await host.RunAsync();
                 }
             }
         }
