@@ -35,9 +35,10 @@
     <Rule Id="CA1019" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
-    <Rule Id="CA2208" Action="Info" />
+    <Rule Id="CA1303" Action="None" />
     <Rule Id="CA1813" Action="Warning" />
     <Rule Id="CA2000" Action="Warning" />
+    <Rule Id="CA2208" Action="Info" />
     <Rule Id="CA2213" Action="Warning" />
     <Rule Id="CA2300" Action="Warning" />
     <Rule Id="CA2301" Action="Warning" />
