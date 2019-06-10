@@ -19,6 +19,7 @@
     <CodeAnalysisRuleSet>$(DnetSharedPath)\Default.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
     <Configurations>$(Configurations);Integration</Configurations>
+    <DebugType>embedded</DebugType>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 
