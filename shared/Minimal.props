@@ -21,6 +21,7 @@
     <Configurations>$(Configurations);Integration</Configurations>
     <DebugType>embedded</DebugType>
     <Platforms>x64</Platforms>
+    <Platform>x64</Platform>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">

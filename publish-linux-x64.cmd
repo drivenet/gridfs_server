@@ -1,9 +1,6 @@
 @echo off
-rmdir /s /q src\bin\x64\Release\netcoreapp2.2\linux-x64\publish
-dotnet publish -c Release -r linux-x64 --self-contained false
-rmdir /s /q packages\gridfs_server-linux-x64
-mkdir packages\gridfs_server-linux-x64
-xcopy src\bin\x64\Release\netcoreapp2.2\linux-x64\publish\*.dll packages\gridfs_server-linux-x64
-xcopy src\bin\x64\Release\netcoreapp2.2\linux-x64\publish\*.pdb packages\gridfs_server-linux-x64
-xcopy src\bin\x64\Release\netcoreapp2.2\linux-x64\publish\*.so packages\gridfs_server-linux-x64
-xcopy src\bin\x64\Release\netcoreapp2.2\linux-x64\publish\*.runtimeconfig.json packages\gridfs_server-linux-x64
+rmdir /s /q packages\linux-x64\gridfs_server
+mkdir packages\linux-x64\gridfs_server
+dotnet publish src --output ..\packages\linux-x64\gridfs_server -c Release -r linux-x64 --self-contained false
+rmdir /s /q packages\linux-x64\gridfs_server\refs
+del packages\linux-x64\gridfs_server\gridfs_server packages\linux-x64\gridfs_server\web.config packages\linux-x64\gridfs_server\*.deps.json
