@@ -68,7 +68,11 @@ namespace GridFSServer.Composition
             var hasJournalD = Tmds.Systemd.Journal.IsSupported;
             if (hasJournalD)
             {
-                loggingBuilder.AddJournal(options => options.SyslogIdentifier = "gridfs-server");
+                loggingBuilder.AddJournal(options =>
+                {
+                    options.SyslogIdentifier = "gridfs-server";
+                    options.DropWhenBusy = true;
+                });
             }
 
             if (!hasJournalD || hostingOptions.ForceConsoleLogging)
