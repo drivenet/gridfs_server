@@ -48,6 +48,9 @@
     <Rule Id="CA2311" Action="Warning" />
     <Rule Id="CA2312" Action="Warning" />
     <Rule Id="CA2315" Action="Warning" />
+    <Rule Id="CA2326" Action="Warning" />
+    <Rule Id="CA2327" Action="Warning" />
+    <Rule Id="CA2328" Action="Warning" />
     <Rule Id="CA3002" Action="Warning" />
     <Rule Id="CA3003" Action="Warning" />
     <Rule Id="CA3004" Action="Warning" />
@@ -65,6 +68,8 @@
     <Rule Id="CA5365" Action="Warning" />
     <Rule Id="CA5367" Action="Warning" />
     <Rule Id="CA5368" Action="Warning" />
+    <Rule Id="CA5387" Action="Warning" />
+    <Rule Id="CA5388" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
     <Rule Id="CA1309" Action="Warning" />
