@@ -5,7 +5,7 @@
     <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.6.9</Version>
+    <Version>1.6.10</Version>
     <NoWarn>CA2007</NoWarn>
   </PropertyGroup>
 
@@ -20,10 +20,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
-    <PackageReference Include="mongodb.driver.gridfs" Version="2.8.1" />
+    <PackageReference Include="mongodb.driver.gridfs" Version="2.9.1" />
     <PackageReference Include="System.IO.Pipelines" Version="4.5.3" />
     <PackageReference Include="System.Net.Security" Version="4.3.2" />
-    <PackageReference Include="Tmds.Systemd.Logging" Version="0.6.3" />
+    <PackageReference Include="Tmds.Systemd.Logging" Version="0.7.0" />
   </ItemGroup>
 
   <ItemGroup>
