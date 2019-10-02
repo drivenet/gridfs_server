@@ -29,10 +29,14 @@
       <Link>stylecop.json</Link>
       <Visible>false</Visible>
     </AdditionalFiles>
+    <AdditionalFiles Include="$(DnetSharedPath)\CodeMetricsConfig.txt">
+      <Link>CodeMetricsConfig.txt</Link>
+      <Visible>false</Visible>
+    </AdditionalFiles>
   </ItemGroup>
 
   <ItemGroup Label="MinimalAnalyzerReferences">
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.5" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
   </ItemGroup>
 </Project>

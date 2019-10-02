@@ -232,6 +232,9 @@ dotnet_naming_symbols.all_members.applicable_kinds = *
 
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
+# CA
+dotnet_code_quality.api_surface = public, internal
+dotnet_code_quality.CA1802.required_modifiers = none
 
 [*.{xml,csproj,props,build,targets,config,ruleset,nuspec,resx,vsixmanifest,browser}]
 indent_size = 2
@@ -247,5 +250,6 @@ charset = utf-8-bom
 
 
 [*.js]
+charset = utf-8
 indent_size = 2
 trim_trailing_whitespace = true
