@@ -72,15 +72,15 @@ namespace GridFSServer.Implementation
             return true;
         }
 
-        private Task<bool> ServeFile(HttpResponse response, Components.IFileInfo fileInfo, bool serveContent, CancellationToken cancellationToken)
+        private async Task<bool> ServeFile(HttpResponse response, Components.IFileInfo fileInfo, bool serveContent, CancellationToken cancellationToken)
         {
             ServeHeaders(response, fileInfo?.Filename);
             if (!serveContent)
             {
-                return Task.FromResult(true);
+                return true;
             }
 
-            return ServeBody(response, fileInfo, cancellationToken);
+            return await ServeBody(response, fileInfo, cancellationToken);
         }
 
         private void ServeHeaders(HttpResponse response, string filename)

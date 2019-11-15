@@ -26,16 +26,9 @@ namespace GridFSServer.Implementation
         public string Filename => _stream.FileInfo.Filename;
 
         public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            return stream.CanSeek
-                ? _errorHandler.HandleErrors(() => CopyToImpl(stream, cancellationToken), _stream.FileInfo.Filename, cancellationToken)
+            => stream?.CanSeek == true
+                ? _errorHandler.HandleErrors(() => CopyToImpl(stream, cancellationToken), Filename, cancellationToken)
                 : CopyToImpl(stream, cancellationToken);
-        }
 
         public void Dispose() => _stream.Dispose();
 

@@ -15,7 +15,7 @@ namespace GridFSServer.Middleware
             _next = next ?? throw new ArgumentNullException(nameof(next));
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext)
         {
             if (httpContext == null)
             {
@@ -28,7 +28,7 @@ namespace GridFSServer.Middleware
                 httpContext.Response.Headers.Add("X-Request-ID", requestId);
             }
 
-            return _next(httpContext);
+            await _next(httpContext);
         }
     }
 }
