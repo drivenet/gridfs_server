@@ -7,6 +7,6 @@ namespace GridFSServer.Components
 {
     internal interface IHttpFileServer
     {
-        Task<bool> TryServeFileAsync(HttpContext httpContext, bool serveContent, CancellationToken cancellationToken);
+        Task<bool> TryServeFile(HttpContext httpContext, bool serveContent, CancellationToken cancellationToken);
     }
 }

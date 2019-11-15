@@ -15,7 +15,7 @@ namespace GridFSServer.Implementation
             _sources = sources ?? throw new ArgumentNullException(nameof(sources));
         }
 
-        public async Task<Components.IFileInfo> FetchFileAsync(string filename, CancellationToken cancellationToken)
+        public async Task<Components.IFileInfo> FetchFile(string filename, CancellationToken cancellationToken)
         {
             foreach (var source in _sources)
             {
@@ -24,7 +24,7 @@ namespace GridFSServer.Implementation
                     throw new InvalidDataException("Null file source encountered.");
                 }
 
-                var fileInfo = await source.FetchFileAsync(filename, cancellationToken);
+                var fileInfo = await source.FetchFile(filename, cancellationToken);
                 if (fileInfo != null)
                 {
                     return fileInfo;

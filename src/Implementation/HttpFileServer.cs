@@ -25,7 +25,7 @@ namespace GridFSServer.Implementation
             _optionsSource = optionsSource ?? throw new ArgumentNullException(nameof(optionsSource));
         }
 
-        public async Task<bool> TryServeFileAsync(HttpContext httpContext, bool serveContent, CancellationToken cancellationToken)
+        public async Task<bool> TryServeFile(HttpContext httpContext, bool serveContent, CancellationToken cancellationToken)
         {
             if (httpContext == null)
             {
@@ -35,7 +35,7 @@ namespace GridFSServer.Implementation
             var request = httpContext.Request;
             var fileSource = _fileSourceResolver.Resolve(request.Host);
             var filename = request.Path.ToString().TrimStart('/');
-            using (var fileInfo = await fileSource.FetchFileAsync(filename, cancellationToken))
+            using (var fileInfo = await fileSource.FetchFile(filename, cancellationToken))
             {
                 if (fileInfo == null)
                 {
@@ -59,7 +59,7 @@ namespace GridFSServer.Implementation
             }
 
             var stream = response.Body;
-            if (!await fileInfo.CopyToAsync(stream, cancellationToken))
+            if (!await fileInfo.CopyTo(stream, cancellationToken))
             {
                 if (stream.CanSeek)
                 {

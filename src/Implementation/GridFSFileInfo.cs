@@ -25,7 +25,7 @@ namespace GridFSServer.Implementation
 
         public string Filename => _stream.FileInfo.Filename;
 
-        public Task<bool> CopyToAsync(Stream stream, CancellationToken cancellationToken)
+        public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
             => stream?.CanSeek == true
                 ? _errorHandler.HandleErrors(() => CopyToImpl(stream, cancellationToken), Filename, cancellationToken)
                 : CopyToImpl(stream, cancellationToken);

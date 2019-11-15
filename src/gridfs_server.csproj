@@ -5,7 +5,7 @@
     <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.6.14</Version>
+    <Version>1.6.15</Version>
     <NoWarn>CA2007</NoWarn>
   </PropertyGroup>
 
