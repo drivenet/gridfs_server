@@ -9,6 +9,6 @@ namespace GridFSServer.Components
     {
         string Filename { get; }
 
-        Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken);
+        Task<bool> CopyToAsync(Stream stream, CancellationToken cancellationToken);
     }
 }

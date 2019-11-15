@@ -19,7 +19,7 @@ namespace GridFSServer.Implementation
             _errorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
         }
 
-        public async Task<Components.IFileInfo> FetchFile(string filename, CancellationToken cancellationToken)
+        public async Task<Components.IFileInfo> FetchFileAsync(string filename, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(filename))
             {

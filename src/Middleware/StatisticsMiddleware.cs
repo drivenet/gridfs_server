@@ -41,7 +41,7 @@ namespace GridFSServer.Middleware
             _timer.Dispose();
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             if (httpContext == null)
             {

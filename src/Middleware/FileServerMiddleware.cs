@@ -18,7 +18,7 @@ namespace GridFSServer.Middleware
             _fileServer = fileServer ?? throw new ArgumentNullException(nameof(fileServer));
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext)
         {
             if (httpContext == null)
             {
@@ -33,7 +33,7 @@ namespace GridFSServer.Middleware
 
             try
             {
-                if (await _fileServer.TryServeFile(httpContext, serveContent, httpContext.RequestAborted))
+                if (await _fileServer.TryServeFileAsync(httpContext, serveContent, httpContext.RequestAborted))
                 {
                     return;
                 }
