@@ -29,8 +29,8 @@ namespace GridFSServer.Implementation
             var stream = await _errorHandler.HandleErrors(
                 () => FetchStream(filename, cancellationToken),
                 filename,
-                cancellationToken)
-                ;
+                cancellationToken);
+
             if (stream == null)
             {
                 return null;
