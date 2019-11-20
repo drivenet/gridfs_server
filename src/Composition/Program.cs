@@ -91,6 +91,9 @@ namespace GridFSServer.Composition
             options.AddServerHeader = false;
             options.Limits.MaxRequestBodySize = 0;
             options.Limits.MaxRequestHeadersTotalSize = 16384;
+
+            // To match all single-chunk files
+            options.Limits.MaxResponseBufferSize = 257 << 10;
             if (hostingOptions != null)
             {
                 var maxConcurrentConnections = hostingOptions.MaxConcurrentConnections;
