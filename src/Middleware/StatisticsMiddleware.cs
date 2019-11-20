@@ -49,7 +49,11 @@ namespace GridFSServer.Middleware
             }
 
             await _next.Invoke(httpContext);
-            var index = httpContext.Response.StatusCode - MinCode;
+            const int ConnectionTimedOut = 522;
+            var statusCode = httpContext.RequestAborted.IsCancellationRequested
+                ? ConnectionTimedOut
+                : httpContext.Response.StatusCode;
+            var index = statusCode - MinCode;
             if (index >= 0 && index < CodeRange)
             {
                 Interlocked.Increment(ref _counts[index]);

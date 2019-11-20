@@ -40,7 +40,15 @@ namespace GridFSServer.Middleware
             }
             catch (OperationCanceledException)
             {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.RequestTimeout;
+                if (httpContext.Response.HasStarted)
+                {
+                    httpContext.Abort();
+                }
+                else
+                {
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.RequestTimeout;
+                }
+
                 return;
             }
 

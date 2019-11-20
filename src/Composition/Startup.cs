@@ -49,11 +49,6 @@ namespace GridFSServer.Composition
             app.UseMiddleware<Middleware.ReverseProxyMiddleware>();
             app.UseMiddleware<Middleware.CorrelationMiddleware>();
 
-            if (!_configuration.GetValue("disableBuffering", false))
-            {
-                app.UseResponseBuffering();
-            }
-
             app.UseMiddleware<Middleware.StatisticsMiddleware>();
             app.UseMiddleware<Middleware.FileServerMiddleware>();
         }
