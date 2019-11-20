@@ -61,6 +61,10 @@ namespace GridFSServer.Implementation
             {
                 await _stream.CopyToAsync(stream, bufferSize, cancellationToken);
             }
+            catch (GridFSChunkException) when (_stream.Position == 0 && position == 0)
+            {
+                return false;
+            }
             catch (GridFSChunkException) when (stream.CanSeek)
             {
                 stream.SetLength(position);
