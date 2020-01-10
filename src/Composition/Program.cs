@@ -18,10 +18,9 @@ namespace GridFSServer.Composition
             while (true)
             {
                 var hostingOptions = GetHostingOptions(commandLineOptions.HostingConfig);
-                using (var host = BuildWebHost(hostingOptions, appConfiguration))
-                {
-                    await host.RunAsync();
-                }
+
+                using var host = BuildWebHost(hostingOptions, appConfiguration);
+                await host.RunAsync();
             }
         }
 
@@ -65,6 +64,7 @@ namespace GridFSServer.Composition
             }
 
             loggingBuilder.AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
+
             var hasJournalD = Tmds.Systemd.Journal.IsSupported;
             if (hasJournalD)
             {

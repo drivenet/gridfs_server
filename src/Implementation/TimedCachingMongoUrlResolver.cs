@@ -26,6 +26,7 @@ namespace GridFSServer.Implementation
         {
             var time = Stopwatch.GetTimestamp();
             var nextTime = _nextTime;
+
             if (time > nextTime)
             {
                 time += Stopwatch.Frequency;

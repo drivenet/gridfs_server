@@ -31,6 +31,7 @@ namespace GridFSServer.Implementation
             var servers = ReadPreferences
                 .Select(readPreference => _fileSourceFactory.Create(new GridFSBucket<BsonValue>(database.WithReadPreference(readPreference))))
                 .ToArray();
+
             return new CompositeFileSource(servers);
         }
     }

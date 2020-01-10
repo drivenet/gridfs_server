@@ -27,10 +27,12 @@ namespace GridFSServer.Implementation
         {
             var time = Stopwatch.GetTimestamp();
             var nextTime = _nextTime;
+
             if (time > nextTime)
             {
                 const int CacheCleanIntervalSeconds = 59;
                 time += Stopwatch.Frequency * CacheCleanIntervalSeconds;
+
                 if (Interlocked.CompareExchange(ref _nextTime, time, nextTime) == nextTime)
                 {
                     CleanCache(url);

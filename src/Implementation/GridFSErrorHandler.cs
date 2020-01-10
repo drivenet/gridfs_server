@@ -26,6 +26,7 @@ namespace GridFSServer.Implementation
 
             const int Attempts = 4;
             const int DelayBetweenAttemptsMs = 1500;
+
             var tries = Attempts;
             while (true)
             {
