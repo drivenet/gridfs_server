@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup Label="TopLevelPathDefaults">
     <DnetSharedPath Condition="'$(DnetSharedPath)' == ''">$(MSBuildThisFileDirectory)</DnetSharedPath>
   </PropertyGroup>
@@ -7,7 +7,8 @@
     <LegacyTargetFramework>net472</LegacyTargetFramework>
     <LegacyTargetFrameworkVersion>v4.7.2</LegacyTargetFrameworkVersion>
     <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
-    <ApplicationTargetFramework>netcoreapp3.1</ApplicationTargetFramework>
+    <ApplicationTargetFramework>netcoreapp2.1</ApplicationTargetFramework>
+    <NewApplicationTargetFramework>netcoreapp3.1</NewApplicationTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Label="MinimalProjectSettings">
@@ -22,6 +23,7 @@
     <DebugType>embedded</DebugType>
     <Platforms>x64</Platforms>
     <Platform>x64</Platform>
+    <NoWarn>IDE0060</NoWarn>
     <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604;CS8618;CS8625</WarningsAsErrors>
   </PropertyGroup>
 

@@ -1,13 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\shared\Minimal.props" />
 
   <PropertyGroup>
-    <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
+    <TargetFramework>$(NewApplicationTargetFramework)</TargetFramework>
+    <OutputType>Exe</OutputType>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.7.5</Version>
+    <Version>1.8.1</Version>
     <NoWarn>CA2007</NoWarn>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="3.1.0" />
