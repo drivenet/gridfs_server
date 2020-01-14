@@ -7,7 +7,7 @@
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
     <Version>1.8.1</Version>
-    <NoWarn>CA2007</NoWarn>
+    <NoWarn>$(NoWarn);CA2007</NoWarn>
   </PropertyGroup>
   
   <ItemGroup>
