@@ -23,7 +23,7 @@
     <DebugType>embedded</DebugType>
     <Platforms>x64</Platforms>
     <Platform>x64</Platform>
-    <NoWarn>IDE0060</NoWarn>
+    <NoWarn>IDE0057;IDE0060</NoWarn>
     <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604;CS8618;CS8625</WarningsAsErrors>
   </PropertyGroup>
 
