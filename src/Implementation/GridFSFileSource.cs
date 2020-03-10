@@ -29,6 +29,7 @@ namespace GridFSServer.Implementation
             var stream = await _errorHandler.HandleErrors(
                 () => FetchStream(filename, cancellationToken),
                 filename,
+                () => true,
                 cancellationToken);
 
             if (stream == null)
@@ -36,14 +37,17 @@ namespace GridFSServer.Implementation
                 return null;
             }
 
-            return new GridFSFileInfo(stream, _bucket, _errorHandler);
+            return new GridFSFileInfo(stream, _errorHandler);
         }
 
         private async Task<GridFSDownloadStream<BsonValue>> FetchStream(string filename, CancellationToken cancellationToken)
         {
             try
             {
-                return await _bucket.OpenDownloadStreamByNameAsync(filename, null, cancellationToken);
+                return await _bucket.OpenDownloadStreamByNameAsync(
+                    filename,
+                    new GridFSDownloadByNameOptions { Seekable = true },
+                    cancellationToken);
             }
             catch (GridFSFileNotFoundException)
             {

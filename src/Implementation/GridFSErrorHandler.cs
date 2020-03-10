@@ -17,11 +17,20 @@ namespace GridFSServer.Implementation
             _logger = logger;
         }
 
-        public async Task<TResult> HandleErrors<TResult>(Func<Task<TResult>> action, string filename, CancellationToken cancellationToken)
+        public async Task<TResult> HandleErrors<TResult>(
+            Func<Task<TResult>> action,
+            string filename,
+            Func<bool> retryValidator,
+            CancellationToken cancellationToken)
         {
-            if (action == null)
+            if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
+            }
+
+            if (retryValidator is null)
+            {
+                throw new ArgumentNullException(nameof(retryValidator));
             }
 
             const int Attempts = 4;
@@ -33,15 +42,15 @@ namespace GridFSServer.Implementation
                 {
                     return await action();
                 }
-                catch (TimeoutException exception) when (tries > 1)
+                catch (TimeoutException exception) when (tries > 1 && retryValidator())
                 {
                     _logger?.LogWarning(exception, "Retrying after read timeout for file \"{0}\".", filename);
                 }
-                catch (MongoConnectionException exception) when (tries > 1)
+                catch (MongoConnectionException exception) when (tries > 1 && retryValidator())
                 {
                     _logger?.LogWarning(exception, "Retrying after network error for file \"{0}\".", filename);
                 }
-                catch (MongoCommandException exception) when (tries > 1)
+                catch (MongoCommandException exception) when (tries > 1 && retryValidator())
                 {
                     _logger?.LogWarning(exception, "Retrying after protocol error for file \"{0}\".", filename);
                 }

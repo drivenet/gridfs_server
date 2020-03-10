@@ -10,73 +10,65 @@ namespace GridFSServer.Implementation
 {
     internal sealed class GridFSFileInfo : Components.IFileInfo
     {
-        private readonly IGridFSBucket<BsonValue> _bucket;
-
         private readonly IGridFSErrorHandler _errorHandler;
 
-        private GridFSDownloadStream<BsonValue> _stream;
+        private readonly GridFSDownloadStream<BsonValue> _stream;
 
-        public GridFSFileInfo(GridFSDownloadStream<BsonValue> stream, IGridFSBucket<BsonValue> bucket, IGridFSErrorHandler errorHandler)
+        public GridFSFileInfo(GridFSDownloadStream<BsonValue> stream, IGridFSErrorHandler errorHandler)
         {
             _stream = stream ?? throw new ArgumentNullException(nameof(stream));
-            _bucket = bucket ?? throw new ArgumentNullException(nameof(bucket));
             _errorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
         }
 
         public string Filename => _stream.FileInfo.Filename;
 
-        public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
-            => stream?.CanSeek == true
-                ? _errorHandler.HandleErrors(() => CopyToImpl(stream, cancellationToken), Filename, cancellationToken)
-                : CopyToImpl(stream, cancellationToken);
-
         public void Dispose() => _stream.Dispose();
 
-        private async Task<bool> CopyToImpl(Stream stream, CancellationToken cancellationToken)
+        public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
         {
-            if (stream == null)
+            if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
-            }
-
-            if (_stream.Position != 0)
-            {
-                var newStream = await _bucket.OpenDownloadStreamAsync(_stream.FileInfo.Id, null, cancellationToken);
-                if (newStream == null)
-                {
-                    return false;
-                }
-
-                using (_stream)
-                {
-                    _stream = newStream;
-                }
             }
 
             const int MinBufferSize = 81920;
             const int MaxBufferSize = 1 << 20;
             var bufferSize = Math.Min(Math.Max(_stream.FileInfo.ChunkSizeBytes, MinBufferSize), MaxBufferSize);
-            var position = stream.CanSeek ? stream.Position : 0;
-            try
-            {
-                await _stream.CopyToAsync(stream, bufferSize, cancellationToken);
-            }
-            catch (GridFSChunkException) when (_stream.Position == 0 && position == 0)
-            {
-                return false;
-            }
-            catch (GridFSChunkException) when (stream.CanSeek)
-            {
-                stream.SetLength(position);
-                return false;
-            }
-            catch when (stream.CanSeek)
-            {
-                stream.SetLength(position);
-                throw;
-            }
+            return _errorHandler.HandleErrors(
+                Copy,
+                Filename,
+                () => (stream.CanSeek && _stream.CanSeek) || _stream.Position == 0,
+                cancellationToken);
 
-            return true;
+            async Task<bool> Copy()
+            {
+                var position = stream.CanSeek ? stream.Position : 0;
+                try
+                {
+                    if (_stream.Position != 0)
+                    {
+                        _stream.Position = 0;
+                    }
+
+                    await _stream.CopyToAsync(stream, bufferSize, cancellationToken);
+                }
+                catch (GridFSChunkException) when (position == 0 && _stream.Position == 0)
+                {
+                    return false;
+                }
+                catch (GridFSChunkException) when (stream.CanSeek)
+                {
+                    stream.SetLength(position);
+                    return false;
+                }
+                catch when (stream.CanSeek)
+                {
+                    stream.SetLength(position);
+                    throw;
+                }
+
+                return true;
+            }
         }
     }
 }

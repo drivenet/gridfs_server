@@ -6,6 +6,10 @@ namespace GridFSServer.Implementation
 {
     internal interface IGridFSErrorHandler
     {
-        Task<TResult> HandleErrors<TResult>(Func<Task<TResult>> action, string filename, CancellationToken cancellationToken);
+        Task<TResult> HandleErrors<TResult>(
+            Func<Task<TResult>> action,
+            string filename,
+            Func<bool> retryValidator,
+            CancellationToken cancellationToken);
     }
 }
