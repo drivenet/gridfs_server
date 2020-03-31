@@ -62,9 +62,14 @@ namespace GridFSServer.Middleware
 
         private void LogStatistics(object u1)
         {
+            var lockTaken = false;
             try
             {
-                LogStatistics();
+                Monitor.TryEnter(_timer, ref lockTaken);
+                if (lockTaken)
+                {
+                    LogStatistics();
+                }
             }
 #pragma warning disable CA1031 // Do not catch general exception types -- critical diagnostics path
             catch
@@ -72,6 +77,13 @@ namespace GridFSServer.Middleware
 #if DEBUG
                 throw;
 #endif
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    Monitor.Exit(_timer);
+                }
             }
 #pragma warning restore CA1031 // Do not catch general exception types
         }
