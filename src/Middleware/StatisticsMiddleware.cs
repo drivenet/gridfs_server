@@ -43,7 +43,7 @@ namespace GridFSServer.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-            if (httpContext == null)
+            if (httpContext is null)
             {
                 throw new ArgumentNullException(nameof(httpContext));
             }

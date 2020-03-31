@@ -10,7 +10,7 @@
             set
             {
                 var cacheControl = value?.Trim();
-                if (value != null && cacheControl.Length == 0)
+                if (value is object && cacheControl.Length == 0)
                 {
                     cacheControl = null;
                 }

@@ -54,12 +54,12 @@ namespace GridFSServer.Composition
 
         private static void ConfigureLogging(ILoggingBuilder loggingBuilder, HostingOptions hostingOptions)
         {
-            if (loggingBuilder == null)
+            if (loggingBuilder is null)
             {
                 throw new ArgumentNullException(nameof(loggingBuilder));
             }
 
-            if (hostingOptions == null)
+            if (hostingOptions is null)
             {
                 throw new ArgumentNullException(nameof(hostingOptions));
             }
@@ -83,7 +83,7 @@ namespace GridFSServer.Composition
 
         private static void ConfigureKestrel(KestrelServerOptions options, HostingOptions hostingOptions)
         {
-            if (options == null)
+            if (options is null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
@@ -94,7 +94,7 @@ namespace GridFSServer.Composition
 
             // To match all single-chunk files
             options.Limits.MaxResponseBufferSize = 257 << 10;
-            if (hostingOptions != null)
+            if (hostingOptions is object)
             {
                 var maxConcurrentConnections = hostingOptions.MaxConcurrentConnections;
                 if (maxConcurrentConnections != 0)

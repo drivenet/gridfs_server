@@ -19,7 +19,7 @@ namespace GridFSServer.Implementation
         public Components.IFileSource Resolve(HostString host)
         {
             var url = _urlResolver.Resolve(host);
-            if (url == null)
+            if (url is null)
             {
                 return EmptyFileSource.Value;
             }

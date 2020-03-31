@@ -10,7 +10,7 @@
             set
             {
                 var listen = value?.Trim();
-                if (value != null && listen.Length == 0)
+                if (value is object && listen.Length == 0)
                 {
                     listen = null;
                 }

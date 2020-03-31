@@ -27,7 +27,7 @@ namespace GridFSServer.Implementation
 
         public async Task<bool> TryServeFile(HttpContext httpContext, bool serveContent, CancellationToken cancellationToken)
         {
-            if (httpContext == null)
+            if (httpContext is null)
             {
                 throw new ArgumentNullException(nameof(httpContext));
             }
@@ -37,7 +37,7 @@ namespace GridFSServer.Implementation
             var filename = request.Path.ToString().TrimStart('/');
             using (var fileInfo = await fileSource.FetchFile(filename, cancellationToken))
             {
-                if (fileInfo == null)
+                if (fileInfo is null)
                 {
                     return false;
                 }
@@ -48,12 +48,12 @@ namespace GridFSServer.Implementation
 
         private static async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
         {
-            if (response == null)
+            if (response is null)
             {
                 throw new ArgumentNullException(nameof(response));
             }
 
-            if (fileInfo == null)
+            if (fileInfo is null)
             {
                 throw new ArgumentNullException(nameof(fileInfo));
             }
@@ -85,7 +85,7 @@ namespace GridFSServer.Implementation
 
         private void ServeHeaders(HttpResponse response, string filename)
         {
-            if (response == null)
+            if (response is null)
             {
                 throw new ArgumentNullException(nameof(response));
             }
@@ -97,7 +97,7 @@ namespace GridFSServer.Implementation
 
             var options = _optionsSource.CurrentValue;
             var cacheControl = options?.CacheControl;
-            if (cacheControl != null)
+            if (cacheControl is object)
             {
                 response.Headers.Add(HeaderNames.CacheControl, cacheControl);
             }

@@ -32,7 +32,7 @@ namespace GridFSServer.Implementation
                 () => true,
                 cancellationToken);
 
-            if (stream == null)
+            if (stream is null)
             {
                 return null;
             }

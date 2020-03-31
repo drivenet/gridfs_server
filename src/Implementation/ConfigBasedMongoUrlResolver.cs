@@ -19,7 +19,7 @@ namespace GridFSServer.Implementation
         public MongoUrl Resolve(HostString host)
         {
             var connectionString = _configuration.GetConnectionString(host.ToString());
-            if (connectionString == null)
+            if (connectionString is null)
             {
                 return null;
             }

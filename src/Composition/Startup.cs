@@ -18,7 +18,7 @@ namespace GridFSServer.Composition
 
         public void ConfigureServices(IServiceCollection services)
         {
-            if (services == null)
+            if (services is null)
             {
                 throw new ArgumentNullException(nameof(services));
             }
@@ -41,7 +41,7 @@ namespace GridFSServer.Composition
 
         public void Configure(IApplicationBuilder app)
         {
-            if (app == null)
+            if (app is null)
             {
                 throw new ArgumentNullException(nameof(app));
             }
