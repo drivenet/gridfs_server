@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Tmds.Systemd;
+
 namespace GridFSServer.Composition
 {
     public static class Program
@@ -15,7 +17,8 @@ namespace GridFSServer.Composition
         {
             var commandLineOptions = GetCommandLineOptions(args);
             var appConfiguration = LoadAppConfiguration(commandLineOptions.Config);
-            while (true)
+
+            do
             {
                 var hostingOptions = GetHostingOptions(commandLineOptions.HostingConfig);
                 using (var host = BuildWebHost(hostingOptions, appConfiguration))
@@ -23,6 +26,7 @@ namespace GridFSServer.Composition
                     await host.RunAsync();
                 }
             }
+            while (ServiceManager.IsRunningAsService);
         }
 
         private static IConfiguration LoadAppConfiguration(string configPath)
@@ -65,7 +69,7 @@ namespace GridFSServer.Composition
             }
 
             loggingBuilder.AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
-            var hasJournalD = Tmds.Systemd.Journal.IsSupported;
+            var hasJournalD = Journal.IsSupported;
             if (hasJournalD)
             {
                 loggingBuilder.AddJournal(options =>
