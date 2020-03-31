@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
@@ -25,15 +26,9 @@ namespace GridFSServer.Middleware
                 throw new ArgumentNullException(nameof(httpContext));
             }
 
-            if (!CheckMethod(httpContext.Request.Method, out var serveContent))
-            {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.NotImplemented;
-                return;
-            }
-
             try
             {
-                if (await _fileServer.TryServeFile(httpContext, serveContent, httpContext.RequestAborted))
+                if (await _fileServer.TryServeFile(httpContext, CancellationToken.None))
                 {
                     return;
                 }
@@ -53,24 +48,6 @@ namespace GridFSServer.Middleware
             }
 
             await _next.Invoke(httpContext);
-        }
-
-        private static bool CheckMethod(string method, out bool serveContent)
-        {
-            switch (method)
-            {
-                case "GET":
-                    serveContent = true;
-                    return true;
-
-                case "HEAD":
-                    serveContent = false;
-                    return true;
-
-                default:
-                    serveContent = false;
-                    return false;
-            }
         }
     }
 }

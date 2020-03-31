@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,24 +26,49 @@ namespace GridFSServer.Implementation
             _optionsSource = optionsSource ?? throw new ArgumentNullException(nameof(optionsSource));
         }
 
-        public async Task<bool> TryServeFile(HttpContext httpContext, bool serveContent, CancellationToken cancellationToken)
+        public async Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken)
         {
             if (httpContext is null)
             {
                 throw new ArgumentNullException(nameof(httpContext));
             }
 
+            if (!CheckMethod(httpContext.Request.Method, out var serveContent))
+            {
+                httpContext.Response.StatusCode = (int)HttpStatusCode.NotImplemented;
+                return true;
+            }
+
+            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, httpContext.RequestAborted);
             var request = httpContext.Request;
             var fileSource = _fileSourceResolver.Resolve(request.Host);
             var filename = request.Path.ToString().TrimStart('/');
-            using (var fileInfo = await fileSource.FetchFile(filename, cancellationToken))
+            using (var fileInfo = await fileSource.FetchFile(filename, cts.Token))
             {
                 if (fileInfo is null)
                 {
                     return false;
                 }
 
-                return await ServeFile(httpContext.Response, fileInfo, serveContent, cancellationToken);
+                return await ServeFile(httpContext.Response, fileInfo, serveContent, cts.Token);
+            }
+        }
+
+        private static bool CheckMethod(string method, out bool serveContent)
+        {
+            switch (method)
+            {
+                case "GET":
+                    serveContent = true;
+                    return true;
+
+                case "HEAD":
+                    serveContent = false;
+                    return true;
+
+                default:
+                    serveContent = false;
+                    return false;
             }
         }
 
