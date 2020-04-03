@@ -15,6 +15,10 @@ namespace GridFSServer.Implementation
         }
 
         public Components.IFileSource Create(IGridFSBucket<BsonValue> bucket)
-            => new GridFSFileSource(bucket, _errorHandler);
+        {
+            var source = new GridFSFileSource(bucket, _errorHandler);
+            source.Initialize();
+            return source;
+        }
     }
 }
