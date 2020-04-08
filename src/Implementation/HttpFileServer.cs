@@ -43,15 +43,13 @@ namespace GridFSServer.Implementation
             var request = httpContext.Request;
             var fileSource = _fileSourceResolver.Resolve(request.Host);
             var filename = request.Path.ToString().TrimStart('/');
-            using (var fileInfo = await fileSource.FetchFile(filename, cts.Token))
+            using var fileInfo = await fileSource.FetchFile(filename, cts.Token);
+            if (fileInfo is null)
             {
-                if (fileInfo is null)
-                {
-                    return false;
-                }
-
-                return await ServeFile(httpContext.Response, fileInfo, serveContent, cts.Token);
+                return false;
             }
+
+            return await ServeFile(httpContext.Response, fileInfo, serveContent, cts.Token);
         }
 
         private static bool CheckMethod(string method, out bool serveContent)

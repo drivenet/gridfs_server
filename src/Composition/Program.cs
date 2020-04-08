@@ -17,16 +17,19 @@ namespace GridFSServer.Composition
         {
             var commandLineOptions = GetCommandLineOptions(args);
             var appConfiguration = LoadAppConfiguration(commandLineOptions.Config);
-
+            var hostingConfigPath = commandLineOptions.HostingConfig;
             do
             {
-                var hostingOptions = GetHostingOptions(commandLineOptions.HostingConfig);
-                using (var host = BuildWebHost(hostingOptions, appConfiguration))
-                {
-                    await host.RunAsync();
-                }
+                await RunHost(appConfiguration, hostingConfigPath);
             }
             while (ServiceManager.IsRunningAsService);
+        }
+
+        private static async Task RunHost(IConfiguration appConfiguration, string hostingConfigPath)
+        {
+            var hostingOptions = GetHostingOptions(hostingConfigPath);
+            using var host = BuildWebHost(hostingOptions, appConfiguration);
+            await host.RunAsync();
         }
 
         private static IConfiguration LoadAppConfiguration(string configPath)
