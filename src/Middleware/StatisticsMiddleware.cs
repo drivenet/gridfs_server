@@ -110,7 +110,7 @@ namespace GridFSServer.Middleware
 
             if (_stats.Length != 0)
             {
-                _logger.LogTrace(_stats.ToString());
+                _logger.LogInformation(_stats.ToString());
             }
         }
     }

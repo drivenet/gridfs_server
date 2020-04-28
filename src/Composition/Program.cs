@@ -71,7 +71,9 @@ namespace GridFSServer.Composition
                 throw new ArgumentNullException(nameof(hostingOptions));
             }
 
-            loggingBuilder.AddFilter((category, level) => level >= LogLevel.Warning || level == LogLevel.Trace);
+            loggingBuilder.AddFilter(
+                (category, level) => level >= LogLevel.Warning
+                    || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
             var hasJournalD = Journal.IsSupported;
             if (hasJournalD)
             {
