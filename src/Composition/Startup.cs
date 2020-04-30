@@ -58,17 +58,6 @@ namespace GridFSServer.Composition
             }
 
             app.UseMiddleware<Middleware.FileServerMiddleware>();
-
-            var filesourceResolver = app.ApplicationServices.GetRequiredService<Components.IFileSourceResolver>();
-            foreach (var connectionString in _configuration.GetSection("ConnectionStrings").AsEnumerable(true))
-            {
-                if (connectionString.Value is null)
-                {
-                    continue;
-                }
-
-                filesourceResolver.Resolve(new HostString(connectionString.Key));
-            }
         }
     }
 }

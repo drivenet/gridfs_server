@@ -6,7 +6,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.8.10</Version>
+    <Version>1.8.11</Version>
     <NoWarn>$(NoWarn);CA2007</NoWarn>
   </PropertyGroup>
   
