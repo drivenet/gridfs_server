@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup Label="TopLevelPathDefaults">
     <DnetSharedPath Condition="'$(DnetSharedPath)' == ''">$(MSBuildThisFileDirectory)</DnetSharedPath>
   </PropertyGroup>
@@ -24,7 +24,7 @@
     <Platforms>x64</Platforms>
     <Platform>x64</Platform>
     <NoWarn>IDE0057;IDE0060</NoWarn>
-    <WarningsAsErrors>CS8600;CS8602;CS8603;CS8604;CS8618;CS8625</WarningsAsErrors>
+    <WarningsAsErrors>CS8073;CS8597;CS8600;CS8602;CS8603;CS8604;CS8605;CS8607;CS8618;CS8620;CS8624;CS8625;CS8634;CS8655;CS8714</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup Label="MinimalAnalyzerFiles">
