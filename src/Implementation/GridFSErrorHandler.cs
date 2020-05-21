@@ -46,6 +46,10 @@ namespace GridFSServer.Implementation
                 {
                     _logger?.LogWarning(exception, "Retrying after read timeout for file \"{0}\".", filename);
                 }
+                catch (MongoWaitQueueFullException exception)
+                {
+                    _logger?.LogWarning(exception, "Retrying after wait queue exception for file \"{0}\".", filename);
+                }
                 catch (MongoConnectionException exception) when (tries > 1 && retryValidator())
                 {
                     _logger?.LogWarning(exception, "Retrying after network error for file \"{0}\".", filename);
