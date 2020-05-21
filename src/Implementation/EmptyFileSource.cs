@@ -11,7 +11,7 @@ namespace GridFSServer.Implementation
 
         public static EmptyFileSource Value { get; } = new EmptyFileSource();
 
-        public Task<Components.IFileInfo> FetchFile(string filename, CancellationToken cancellationToken)
-            => Task.FromResult((Components.IFileInfo)null);
+        public Task<Components.IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken)
+            => Task.FromResult((Components.IFileInfo?)null);
     }
 }

@@ -98,7 +98,7 @@ namespace GridFSServer.Implementation
 
         private async Task<bool> ServeFile(HttpResponse response, Components.IFileInfo fileInfo, bool serveContent, CancellationToken cancellationToken)
         {
-            ServeHeaders(response, fileInfo?.Filename);
+            ServeHeaders(response, fileInfo.Filename);
             if (!serveContent)
             {
                 return true;

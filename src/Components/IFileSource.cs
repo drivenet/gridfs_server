@@ -5,6 +5,6 @@ namespace GridFSServer.Components
 {
     internal interface IFileSource
     {
-        Task<IFileInfo> FetchFile(string filename, CancellationToken cancellationToken);
+        Task<IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken);
     }
 }

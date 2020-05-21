@@ -15,7 +15,7 @@ namespace GridFSServer.Implementation
             _sources = sources ?? throw new ArgumentNullException(nameof(sources));
         }
 
-        public async Task<Components.IFileInfo> FetchFile(string filename, CancellationToken cancellationToken)
+        public async Task<Components.IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken)
         {
             foreach (var source in _sources)
             {

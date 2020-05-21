@@ -2,15 +2,15 @@
 {
     internal sealed class HttpServerOptions
     {
-        private string _cacheControl;
+        private string? _cacheControl;
 
-        public string CacheControl
+        public string? CacheControl
         {
             get => _cacheControl;
             set
             {
                 var cacheControl = value?.Trim();
-                if (value is object && cacheControl.Length == 0)
+                if (cacheControl is object && cacheControl.Length == 0)
                 {
                     cacheControl = null;
                 }

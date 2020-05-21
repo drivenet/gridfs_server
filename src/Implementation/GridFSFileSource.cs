@@ -34,7 +34,7 @@ namespace GridFSServer.Implementation
             }
         }
 
-        public async Task<Components.IFileInfo> FetchFile(string filename, CancellationToken cancellationToken)
+        public async Task<Components.IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(filename))
             {
@@ -55,7 +55,7 @@ namespace GridFSServer.Implementation
             return new GridFSFileInfo(stream, _errorHandler);
         }
 
-        private async Task<GridFSDownloadStream<BsonValue>> FetchStream(string filename, CancellationToken cancellationToken)
+        private async Task<GridFSDownloadStream<BsonValue>?> FetchStream(string filename, CancellationToken cancellationToken)
         {
             try
             {

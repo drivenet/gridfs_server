@@ -11,9 +11,9 @@ namespace GridFSServer.Implementation
 {
     internal sealed class TimedCachingMongoUrlResolver : IMongoUrlResolver
     {
-        private readonly ConcurrentDictionary<HostString, MongoUrl> _cache = new ConcurrentDictionary<HostString, MongoUrl>();
+        private readonly ConcurrentDictionary<HostString, MongoUrl?> _cache = new ConcurrentDictionary<HostString, MongoUrl?>();
 
-        private readonly Func<HostString, MongoUrl> _resolver;
+        private readonly Func<HostString, MongoUrl?> _resolver;
 
         private long _nextTime;
 
@@ -22,7 +22,7 @@ namespace GridFSServer.Implementation
             _resolver = (inner ?? throw new ArgumentNullException(nameof(inner))).Resolve;
         }
 
-        public MongoUrl Resolve(HostString host)
+        public MongoUrl? Resolve(HostString host)
         {
             var time = Stopwatch.GetTimestamp();
             var nextTime = _nextTime;

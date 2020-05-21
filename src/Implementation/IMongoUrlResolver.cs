@@ -6,6 +6,6 @@ namespace GridFSServer.Implementation
 {
     internal interface IMongoUrlResolver
     {
-        MongoUrl Resolve(HostString host);
+        MongoUrl? Resolve(HostString host);
     }
 }

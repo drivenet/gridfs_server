@@ -16,7 +16,7 @@ namespace GridFSServer.Implementation
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public MongoUrl Resolve(HostString host)
+        public MongoUrl? Resolve(HostString host)
         {
             var connectionString = _configuration.GetConnectionString(host.ToString());
             if (connectionString is null)

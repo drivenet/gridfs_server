@@ -2,15 +2,15 @@
 {
     internal sealed class HostingOptions
     {
-        private string _listen;
+        private string? _listen;
 
-        public string Listen
+        public string? Listen
         {
             get => _listen;
             set
             {
                 var listen = value?.Trim();
-                if (value is object && listen.Length == 0)
+                if (listen is object && listen.Length == 0)
                 {
                     listen = null;
                 }

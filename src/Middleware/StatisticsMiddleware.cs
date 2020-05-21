@@ -60,7 +60,7 @@ namespace GridFSServer.Middleware
             }
         }
 
-        private void LogStatistics(object u1)
+        private void LogStatistics(object? u1)
         {
             var lockTaken = false;
             try

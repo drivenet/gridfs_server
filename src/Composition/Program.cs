@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using Tmds.Systemd;
@@ -18,17 +18,8 @@ namespace GridFSServer.Composition
             var commandLineOptions = GetCommandLineOptions(args);
             var appConfiguration = LoadAppConfiguration(commandLineOptions.Config);
             var hostingConfigPath = commandLineOptions.HostingConfig;
-            do
-            {
-                await RunHost(appConfiguration, hostingConfigPath);
-            }
-            while (ServiceManager.IsRunningAsService);
-        }
-
-        private static async Task RunHost(IConfiguration appConfiguration, string hostingConfigPath)
-        {
             var hostingOptions = GetHostingOptions(hostingConfigPath);
-            using var host = BuildWebHost(hostingOptions, appConfiguration);
+            using var host = BuildHost(hostingOptions, appConfiguration);
             await host.RunAsync();
         }
 
@@ -49,14 +40,16 @@ namespace GridFSServer.Composition
                 .Build()
                 .Get<HostingOptions>() ?? new HostingOptions();
 
-        private static IWebHost BuildWebHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
-            => new WebHostBuilder()
-                .UseSetting(WebHostDefaults.ServerUrlsKey, hostingOptions?.Listen)
+        private static IHost BuildHost(HostingOptions hostingOptions, IConfiguration appConfiguration)
+            => new HostBuilder()
+                .ConfigureWebHost(webHost => webHost
+                    .UseUrls(hostingOptions.Listen)
+                    .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
+                    .UseLibuv()
+                    .UseStartup<Startup>())
                 .ConfigureLogging(loggingBuilder => ConfigureLogging(loggingBuilder, hostingOptions))
-                .UseKestrel(options => ConfigureKestrel(options, hostingOptions))
-                .UseLibuv()
-                .ConfigureServices(services => services.AddSingleton(appConfiguration))
-                .UseStartup<Startup>()
+                .UseSystemd()
+                .ConfigureAppConfiguration(configBuilder => configBuilder.AddConfiguration(appConfiguration))
                 .Build();
 
         private static void ConfigureLogging(ILoggingBuilder loggingBuilder, HostingOptions hostingOptions)

@@ -2,9 +2,9 @@
 {
     internal sealed class CommandLineOptions
     {
-        private string _config;
+        private string? _config;
 
-        private string _hostingConfig;
+        private string? _hostingConfig;
 
         public string Config
         {
