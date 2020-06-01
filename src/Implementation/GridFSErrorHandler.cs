@@ -33,8 +33,8 @@ namespace GridFSServer.Implementation
                 throw new ArgumentNullException(nameof(retryValidator));
             }
 
-            const int Attempts = 3;
-            const int DelayBetweenAttemptsMs = 1000;
+            const int Attempts = 4;
+            const int DelayBetweenAttemptsMs = 1500;
             var tries = Attempts;
             while (true)
             {
