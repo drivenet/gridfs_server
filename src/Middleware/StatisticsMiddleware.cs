@@ -65,7 +65,9 @@ namespace GridFSServer.Middleware
             var lockTaken = false;
             try
             {
+#pragma warning disable CA2002 // Do not lock on objects with weak identity -- local-only immutable object
                 Monitor.TryEnter(_timer, ref lockTaken);
+#pragma warning restore CA2002 // Do not lock on objects with weak identity
                 if (lockTaken)
                 {
                     LogStatistics();

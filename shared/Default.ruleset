@@ -19,6 +19,7 @@
     <Rule Id="CA1501" Action="Warning" />
     <Rule Id="CA1502" Action="Warning" />
     <Rule Id="CA1505" Action="Warning" />
+    <Rule Id="CA1508" Action="Warning" />
     <Rule Id="CA1509" Action="Warning" />
     <Rule Id="CA1708" Action="Warning" />
     <Rule Id="CA1707" Action="None" />
@@ -70,11 +71,17 @@
     <Rule Id="CA3012" Action="Warning" />
     <Rule Id="CA3061" Action="Warning" />
     <Rule Id="CA5358" Action="Warning" />
+    <Rule Id="CA5361" Action="Warning" />
     <Rule Id="CA5362" Action="Warning" />
     <Rule Id="CA5365" Action="Warning" />
     <Rule Id="CA5367" Action="Warning" />
     <Rule Id="CA5368" Action="Warning" />
     <Rule Id="CA5375" Action="Warning" />
+    <Rule Id="CA5376" Action="Warning" />
+    <Rule Id="CA5377" Action="Warning" />
+    <Rule Id="CA5378" Action="Warning" />
+    <Rule Id="CA5380" Action="Warning" />
+    <Rule Id="CA5381" Action="Warning" />
     <Rule Id="CA5382" Action="Warning" />
     <Rule Id="CA5383" Action="Warning" />
     <Rule Id="CA5386" Action="Warning" />
@@ -90,6 +97,9 @@
     <Rule Id="CA5398" Action="Warning" />
     <Rule Id="CA5399" Action="Warning" />
     <Rule Id="CA5400" Action="Warning" />
+    <Rule Id="CA5401" Action="Warning" />
+    <Rule Id="CA5402" Action="Warning" />
+    <Rule Id="CA5403" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.CSharp.Analyzers" RuleNamespace="Microsoft.NetCore.CSharp.Analyzers">
     <Rule Id="CA1309" Action="Warning" />
@@ -116,6 +126,7 @@
     <Rule Id="SA1610" Action="None" />
     <Rule Id="SA1611" Action="None" />
     <Rule Id="SA1615" Action="None" />
+    <Rule Id="SA1618" Action="None" />
     <Rule Id="SA1623" Action="None" />
     <Rule Id="SA1625" Action="None" />
     <Rule Id="SA1628" Action="Warning" />
