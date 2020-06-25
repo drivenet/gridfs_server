@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +34,7 @@ namespace GridFSServer.Implementation
 
             if (!CheckMethod(httpContext.Request.Method, out var serveContent))
             {
-                httpContext.Response.StatusCode = (int)HttpStatusCode.NotImplemented;
+                httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
                 return true;
             }
 

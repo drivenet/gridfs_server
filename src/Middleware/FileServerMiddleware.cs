@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,7 +40,7 @@ namespace GridFSServer.Middleware
                 }
                 else
                 {
-                    httpContext.Response.StatusCode = (int)HttpStatusCode.RequestTimeout;
+                    httpContext.Response.StatusCode = StatusCodes.Status408RequestTimeout;
                 }
 
                 return;
