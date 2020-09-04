@@ -1,7 +1,7 @@
 @echo off
 rmdir /s /q packages\linux-x64\gridfs_server
 mkdir packages\linux-x64\gridfs_server
-dotnet publish src --output packages\linux-x64\gridfs_server -c Release -r linux-x64 --self-contained false
+dotnet publish src --output packages\linux-x64\gridfs_server -c Integration -r linux-x64 --self-contained false
 move packages\linux-x64\gridfs_server\Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.dll "%TEMP%"
 move packages\linux-x64\gridfs_server\Microsoft.Extensions.Hosting.Systemd.dll "%TEMP%"
 move packages\linux-x64\gridfs_server\Microsoft.AspNetCore.Buffering.dll "%TEMP%"
