@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.9.6</Version>
+    <Version>1.9.7</Version>
     <NoWarn>$(NoWarn);CA2007</NoWarn>
   </PropertyGroup>
   
@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="3.1.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="3.1.8" />
-    <PackageReference Include="mongodb.driver.gridfs" Version="2.11.2" />
+    <PackageReference Include="mongodb.driver.gridfs" Version="2.10.4" />
     <PackageReference Include="Tmds.Systemd.Logging" Version="0.7.0" />
   </ItemGroup>
 
