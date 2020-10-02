@@ -73,7 +73,6 @@ namespace GridFSServer.Composition
                 loggingBuilder.AddJournal(options =>
                 {
                     options.SyslogIdentifier = "gridfs-server";
-                    options.DropWhenBusy = true;
                 });
             }
 
