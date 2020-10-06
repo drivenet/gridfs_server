@@ -17,7 +17,6 @@ namespace GridFSServer.Implementation
 
         private readonly IOptionsMonitor<Components.HttpServerOptions> _optionsSource;
 
-        // IOptionsMonitor<> is used instead of IOptionsSnapshot<> injection to improve performance and prevent memory leaks
         public HttpFileServer(Components.IFileSourceResolver fileSourceResolver, IContentTypeProvider contentTypeProvider, IOptionsMonitor<Components.HttpServerOptions> optionsSource)
         {
             _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
