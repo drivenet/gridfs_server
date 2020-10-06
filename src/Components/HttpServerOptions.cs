@@ -18,5 +18,7 @@
                 _cacheControl = cacheControl;
             }
         }
+
+        public bool LogRequests { get; set; }
     }
 }

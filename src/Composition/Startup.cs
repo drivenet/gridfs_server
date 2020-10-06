@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace GridFSServer.Composition
 {
@@ -36,7 +38,12 @@ namespace GridFSServer.Composition
             services.AddSingleton<Components.IFileSourceResolver>(provider =>
                 provider.GetRequiredService<Implementation.DefaultGridFSFileSourceResolver>());
             services.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
-            services.AddSingleton<Components.IHttpFileServer, Implementation.HttpFileServer>();
+            services.AddSingleton<Implementation.HttpFileServer>();
+            services.AddSingleton<Components.IHttpFileServer>(
+                provider => new Implementation.LoggingFileServer(
+                    provider.GetRequiredService<Implementation.HttpFileServer>(),
+                    provider.GetRequiredService<IOptionsMonitor<Components.HttpServerOptions>>(),
+                    provider.GetRequiredService<ILogger<Components.IHttpFileServer>>()));
         }
 
         public void Configure(IApplicationBuilder app)
