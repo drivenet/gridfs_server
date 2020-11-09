@@ -20,11 +20,6 @@ namespace GridFSServer.Composition
 
         public void ConfigureServices(IServiceCollection services)
         {
-            if (services is null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
-
             services.Configure<Components.HttpServerOptions>(_configuration.GetSection("httpServer"));
             services.AddSingleton<Implementation.IGridFSFileSourceFactory, Implementation.GridFSFileSourceFactory>();
             services.AddSingleton<Implementation.IGridFSErrorHandler, Implementation.GridFSErrorHandler>();
@@ -48,11 +43,6 @@ namespace GridFSServer.Composition
 
         public void Configure(IApplicationBuilder app)
         {
-            if (app is null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
-
             app.UseMiddleware<Middleware.ReverseProxyMiddleware>();
             app.UseMiddleware<Middleware.CorrelationMiddleware>();
 

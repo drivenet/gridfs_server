@@ -1,5 +1,0 @@
-﻿{
-  "listen": "http://localhost:5002",
-  "maxConcurrentConnections": 1000,
-  "forceConsoleLogging": false,
-}
