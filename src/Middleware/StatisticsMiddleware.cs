@@ -43,11 +43,6 @@ namespace GridFSServer.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-            if (httpContext is null)
-            {
-                throw new ArgumentNullException(nameof(httpContext));
-            }
-
             await _next.Invoke(httpContext);
             const int ConnectionTimedOut = 522;
             var statusCode = httpContext.RequestAborted.IsCancellationRequested

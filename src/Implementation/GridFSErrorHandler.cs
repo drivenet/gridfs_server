@@ -23,16 +23,6 @@ namespace GridFSServer.Implementation
             Func<bool> retryValidator,
             CancellationToken cancellationToken)
         {
-            if (action is null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            if (retryValidator is null)
-            {
-                throw new ArgumentNullException(nameof(retryValidator));
-            }
-
             const int Attempts = 4;
             const int DelayBetweenAttemptsMs = 1500;
             var tries = Attempts;

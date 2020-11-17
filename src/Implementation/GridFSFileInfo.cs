@@ -26,11 +26,6 @@ namespace GridFSServer.Implementation
 
         public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
         {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
             const int MinBufferSize = 81920;
             const int MaxBufferSize = 1 << 20;
             var bufferSize = Math.Min(Math.Max(_stream.FileInfo.ChunkSizeBytes, MinBufferSize), MaxBufferSize);

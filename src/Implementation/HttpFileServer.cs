@@ -26,11 +26,6 @@ namespace GridFSServer.Implementation
 
         public async Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken)
         {
-            if (httpContext is null)
-            {
-                throw new ArgumentNullException(nameof(httpContext));
-            }
-
             if (!CheckMethod(httpContext.Request.Method, out var serveContent))
             {
                 httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
@@ -70,16 +65,6 @@ namespace GridFSServer.Implementation
 
         private static async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
         {
-            if (response is null)
-            {
-                throw new ArgumentNullException(nameof(response));
-            }
-
-            if (fileInfo is null)
-            {
-                throw new ArgumentNullException(nameof(fileInfo));
-            }
-
             var stream = response.Body;
             if (!await fileInfo.CopyTo(stream, cancellationToken))
             {
@@ -107,11 +92,6 @@ namespace GridFSServer.Implementation
 
         private void ServeHeaders(HttpResponse response, string filename)
         {
-            if (response is null)
-            {
-                throw new ArgumentNullException(nameof(response));
-            }
-
             if (_contentTypeProvider.TryGetContentType(filename, out var contentType))
             {
                 response.ContentType = contentType;

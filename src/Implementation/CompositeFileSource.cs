@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,11 +18,6 @@ namespace GridFSServer.Implementation
         {
             foreach (var source in _sources)
             {
-                if (source is null)
-                {
-                    throw new InvalidDataException("Null file source encountered.");
-                }
-
                 var fileInfo = await source.FetchFile(filename, cancellationToken);
                 if (fileInfo is object)
                 {

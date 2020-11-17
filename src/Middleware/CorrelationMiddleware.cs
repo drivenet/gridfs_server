@@ -17,11 +17,6 @@ namespace GridFSServer.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-            if (httpContext is null)
-            {
-                throw new ArgumentNullException(nameof(httpContext));
-            }
-
             var requestId = httpContext.Features.Get<IHttpRequestIdentifierFeature>()?.TraceIdentifier;
             if (!string.IsNullOrWhiteSpace(requestId))
             {

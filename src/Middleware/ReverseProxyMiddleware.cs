@@ -19,11 +19,6 @@ namespace GridFSServer.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-            if (httpContext is null)
-            {
-                throw new ArgumentNullException(nameof(httpContext));
-            }
-
             UpdateRequestId(httpContext);
             UpdateRemoteIpAddress(httpContext);
             UpdateServerPort(httpContext);
