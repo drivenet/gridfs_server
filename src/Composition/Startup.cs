@@ -20,6 +20,10 @@ namespace GridFSServer.Composition
 
         public void ConfigureServices(IServiceCollection services)
         {
+#pragma warning disable CS0618 // Type or member is obsolete -- required for migration to new driver version
+            MongoDB.Bson.BsonDefaults.GuidRepresentationMode = MongoDB.Bson.GuidRepresentationMode.V3;
+#pragma warning restore CS0618 // Type or member is obsolete
+
             services.Configure<Components.HttpServerOptions>(_configuration.GetSection("httpServer"));
             services.AddSingleton<Implementation.IGridFSFileSourceFactory, Implementation.GridFSFileSourceFactory>();
             services.AddSingleton<Implementation.IGridFSErrorHandler, Implementation.GridFSErrorHandler>();
