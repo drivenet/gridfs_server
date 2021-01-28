@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -7,7 +6,6 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 
 using Tmds.Systemd;
 
@@ -35,9 +33,6 @@ namespace GridFSServer.Composition
         private static IWebHostBuilder ConfigureWebHost(IWebHostBuilder webHost)
             => webHost
                 .UseKestrel((builderContext, options) => ConfigureKestrel(builderContext, options))
-#if !MINIMAL_BUILD
-                .UseLibuv()
-#endif
                 .UseStartup<Startup>();
 
 #if MINIMAL_BUILD
@@ -67,10 +62,9 @@ namespace GridFSServer.Composition
                  || !Journal.IsAvailable)
 #endif
             {
-                loggingBuilder.AddConsole(options =>
+                loggingBuilder.AddSystemdConsole(options =>
                 {
                     options.IncludeScopes = true;
-                    options.Format = ConsoleLoggerFormat.Systemd;
                     options.TimestampFormat = "yyyy-MM-ddTHH:mm:ss.fffffffzzz \""
                         + Environment.MachineName
                         + "\" \""
@@ -102,26 +96,7 @@ namespace GridFSServer.Composition
             }
 
 #if !MINIMAL_BUILD
-            // SD_LISTEN_FDS_START https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
-            const int SdListenFdsStart = 3;
-            const string ListenFdsEnvVar = "LISTEN_FDS";
-
-            options.UseSystemd(listenOptions =>
-            {
-                if (listenOptions.FileHandle == SdListenFdsStart)
-                {
-                    // This matches sd_listen_fds behavior that requires %LISTEN_FDS% to be present and in range [1;INT_MAX-SD_LISTEN_FDS_START]
-                    if (int.TryParse(Environment.GetEnvironmentVariable(ListenFdsEnvVar), NumberStyles.None, NumberFormatInfo.InvariantInfo, out var listenFds)
-                        && listenFds > 1
-                        && listenFds <= int.MaxValue - SdListenFdsStart)
-                    {
-                        for (var handle = SdListenFdsStart + 1; handle < SdListenFdsStart + listenFds; ++handle)
-                        {
-                            options.ListenHandle((ulong)handle);
-                        }
-                    }
-                }
-            });
+            options.UseSystemd();
 #endif
         }
 

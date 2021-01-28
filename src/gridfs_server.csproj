@@ -2,20 +2,18 @@
   <Import Project="..\shared\Minimal.props" />
 
   <PropertyGroup>
-    <TargetFramework>$(NewApplicationTargetFramework)</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.11.2</Version>
-    <NoWarn>$(NoWarn);CA2007</NoWarn>
+    <Version>1.12.1</Version>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
     <PackageReference Include="mongodb.driver.gridfs" Version="2.11.6" />
     <PackageReference Include="Tmds.Systemd.Logging" Version="0.8.0" />
   </ItemGroup>
