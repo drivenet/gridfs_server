@@ -83,8 +83,10 @@ csharp_style_expression_bodied_properties = true:suggestion
 
 # Pattern matching preferences
 csharp_style_pattern_matching_over_as_with_null_check = true:warning
-csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_is_with_cast_check = true:warning
 csharp_style_prefer_switch_expression = true:suggestion
+csharp_style_prefer_pattern_matching = true:suggestion
+csharp_style_prefer_not_pattern = true:warning
 
 # Null-checking preferences
 csharp_style_conditional_delegate_call = true:warning
@@ -106,11 +108,15 @@ csharp_style_throw_expression = true:suggestion
 csharp_style_pattern_local_over_anonymous_function = true:warning
 csharp_style_prefer_index_operator = true:warning
 csharp_style_prefer_range_operator = true:suggestion
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
 csharp_style_throw_expression = true:warning
 csharp_style_unused_value_expression_statement_preference = discard_variable:none
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:warning
+
+# Modifier preferences
+csharp_prefer_static_local_function = true:warning
 
 ## C# Formatting Rules
 # New line preferences
@@ -323,7 +329,7 @@ dotnet_diagnostic.CA1820.severity = warning
 dotnet_diagnostic.CA1823.severity = warning
 dotnet_diagnostic.CA2000.severity = warning
 dotnet_diagnostic.CA2002.severity = warning
-dotnet_diagnostic.CA2007.severity = suggestion
+dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA2008.severity = warning
 dotnet_diagnostic.CA2119.severity = warning
 dotnet_diagnostic.CA2153.severity = warning
