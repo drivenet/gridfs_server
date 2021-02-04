@@ -9,50 +9,41 @@ using Microsoft.Extensions.Logging;
 
 namespace GridFSServer.Middleware
 {
-    internal sealed class StatisticsMiddleware : IDisposable
+    internal sealed class StatisticsMiddleware : IMiddleware, IDisposable
     {
         private const int MinCode = 100;
-
         private const int MaxCode = 599;
-
         private const int CodeRange = MaxCode + 1 - MinCode;
-
         private static readonly TimeSpan TraceInterval = TimeSpan.FromMinutes(1);
 
         private readonly int[] _counts = new int[CodeRange];
-
         private readonly StringBuilder _stats = new StringBuilder();
-
-        private readonly RequestDelegate _next;
-
         private readonly ILogger<StatisticsMiddleware> _logger;
-
         private readonly Timer _timer;
 
-        public StatisticsMiddleware(RequestDelegate next, ILogger<StatisticsMiddleware> logger)
+        public StatisticsMiddleware(ILogger<StatisticsMiddleware> logger)
         {
-            _next = next ?? throw new ArgumentNullException(nameof(next));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _timer = new Timer(LogStatistics, null, TraceInterval, TraceInterval);
         }
 
-        public void Dispose()
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            _timer.Dispose();
-        }
-
-        public async Task Invoke(HttpContext httpContext)
-        {
-            await _next.Invoke(httpContext);
+            await next.Invoke(context);
             const int ConnectionTimedOut = 522;
-            var statusCode = httpContext.RequestAborted.IsCancellationRequested
+            var statusCode = context.RequestAborted.IsCancellationRequested
                 ? ConnectionTimedOut
-                : httpContext.Response.StatusCode;
+                : context.Response.StatusCode;
             var index = statusCode - MinCode;
             if (index >= 0 && index < CodeRange)
             {
                 Interlocked.Increment(ref _counts[index]);
             }
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
         }
 
         private void LogStatistics(object? u1)

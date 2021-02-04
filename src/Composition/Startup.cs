@@ -43,13 +43,17 @@ namespace GridFSServer.Composition
                     provider.GetRequiredService<Implementation.HttpFileServer>(),
                     provider.GetRequiredService<IOptionsMonitor<Components.HttpServerOptions>>(),
                     provider.GetRequiredService<ILogger<Components.IHttpFileServer>>()));
+
+            services.AddSingleton<Middleware.ReverseProxyMiddleware>();
+            services.AddSingleton<Middleware.CorrelationMiddleware>();
+            services.AddSingleton<Middleware.StatisticsMiddleware>();
+            services.AddSingleton<Middleware.FileServerMiddleware>();
         }
 
         public void Configure(IApplicationBuilder app)
         {
             app.UseMiddleware<Middleware.ReverseProxyMiddleware>();
             app.UseMiddleware<Middleware.CorrelationMiddleware>();
-
             app.UseMiddleware<Middleware.StatisticsMiddleware>();
 
             if (!_configuration.GetValue("disableBuffering", false))

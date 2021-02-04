@@ -6,42 +6,39 @@ using Microsoft.AspNetCore.Http;
 
 namespace GridFSServer.Middleware
 {
-    internal sealed class FileServerMiddleware
+    internal sealed class FileServerMiddleware : IMiddleware
     {
-        private readonly RequestDelegate _next;
-
         private readonly Components.IHttpFileServer _fileServer;
 
-        public FileServerMiddleware(RequestDelegate next, Components.IHttpFileServer fileServer)
+        public FileServerMiddleware(Components.IHttpFileServer fileServer)
         {
-            _next = next ?? throw new ArgumentNullException(nameof(next));
             _fileServer = fileServer ?? throw new ArgumentNullException(nameof(fileServer));
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
-                if (await _fileServer.TryServeFile(httpContext, CancellationToken.None))
+                if (await _fileServer.TryServeFile(context, CancellationToken.None))
                 {
                     return;
                 }
             }
             catch (OperationCanceledException)
             {
-                if (httpContext.Response.HasStarted)
+                if (context.Response.HasStarted)
                 {
-                    httpContext.Abort();
+                    context.Abort();
                 }
                 else
                 {
-                    httpContext.Response.StatusCode = StatusCodes.Status408RequestTimeout;
+                    context.Response.StatusCode = StatusCodes.Status408RequestTimeout;
                 }
 
                 return;
             }
 
-            await _next.Invoke(httpContext);
+            await next.Invoke(context);
         }
     }
 }
