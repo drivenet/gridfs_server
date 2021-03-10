@@ -96,7 +96,36 @@ namespace GridFSServer.Composition
             }
 
 #if !MINIMAL_BUILD
+#if NET6_0_OR_GREATER
             options.UseSystemd();
+#else
+            // SD_LISTEN_FDS_START https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
+            const ulong SdListenFdsStart = 3;
+
+            byte extraListenFds = 0;
+            options.UseSystemd(listenOptions =>
+            {
+                if (listenOptions.FileHandle == SdListenFdsStart)
+                {
+                    // LISTEN_FDS https://www.freedesktop.org/software/systemd/man/sd_listen_fds.html
+                    const string ListenFds = "LISTEN_FDS";
+                    if (Environment.GetEnvironmentVariable(ListenFds) is { } listenFdsString)
+                    {
+                        if (byte.TryParse(listenFdsString, System.Globalization.NumberStyles.None, System.Globalization.NumberFormatInfo.InvariantInfo, out extraListenFds))
+                        {
+                            --extraListenFds;
+                        }
+                    }
+                }
+            });
+
+            for (ulong handle = SdListenFdsStart + 1, lastHandle = SdListenFdsStart + extraListenFds;
+                handle <= lastHandle;
+                ++handle)
+            {
+                options.ListenHandle(handle);
+            }
+#endif
 #endif
         }
 
