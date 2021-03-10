@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.12.3</Version>
+    <Version>1.12.4</Version>
   </PropertyGroup>
   
   <ItemGroup>
@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.json">
+    <Content Update="appsettings.json">
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>
