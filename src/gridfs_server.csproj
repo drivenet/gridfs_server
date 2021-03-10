@@ -3,9 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
-    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <OutputType>Exe</OutputType>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
     <Version>1.12.2</Version>
