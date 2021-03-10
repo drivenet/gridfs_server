@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(ApplicationTargetFramework)</TargetFramework>
+    <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
