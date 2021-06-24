@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +16,13 @@ namespace GridFSServer.Composition
     {
         public static async Task Main(string[] args)
         {
+            if (args.Contains("--version"))
+            {
+                var version = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) ?? "?.?.?";
+                Console.WriteLine("gridfs_server " + version);
+                return;
+            }
+
             using var host = BuildHost(args);
             await host.RunAsync();
         }
