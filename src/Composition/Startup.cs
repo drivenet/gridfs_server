@@ -24,6 +24,8 @@ namespace GridFSServer.Composition
             MongoDB.Bson.BsonDefaults.GuidRepresentationMode = MongoDB.Bson.GuidRepresentationMode.V3;
 #pragma warning restore CS0618 // Type or member is obsolete
 
+            services.AddSingleton<Microsoft.IO.RecyclableMemoryStreamManager>();
+
             services.Configure<Components.HttpServerOptions>(_configuration.GetSection("httpServer"));
             services.AddSingleton<Implementation.IGridFSFileSourceFactory, Implementation.GridFSFileSourceFactory>();
             services.AddSingleton<Implementation.IGridFSErrorHandler, Implementation.GridFSErrorHandler>();
@@ -50,17 +52,11 @@ namespace GridFSServer.Composition
             services.AddSingleton<Middleware.FileServerMiddleware>();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public static void Configure(IApplicationBuilder app)
         {
             app.UseMiddleware<Middleware.ReverseProxyMiddleware>();
             app.UseMiddleware<Middleware.CorrelationMiddleware>();
             app.UseMiddleware<Middleware.StatisticsMiddleware>();
-
-            if (!_configuration.GetValue("disableBuffering", false))
-            {
-                app.UseResponseBuffering();
-            }
-
             app.UseMiddleware<Middleware.FileServerMiddleware>();
         }
     }

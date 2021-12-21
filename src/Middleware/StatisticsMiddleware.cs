@@ -15,6 +15,11 @@ namespace GridFSServer.Middleware
         private const int MaxCode = 599;
         private const int CodeRange = MaxCode + 1 - MinCode;
         private static readonly TimeSpan TraceInterval = TimeSpan.FromMinutes(1);
+        private static readonly Action<ILogger, string, Exception?> Log =
+            LoggerMessage.Define<string>(
+                LogLevel.Information,
+                EventIds.Statistics,
+                "{Statistics}");
 
         private readonly int[] _counts = new int[CodeRange];
         private readonly StringBuilder _stats = new StringBuilder();
@@ -98,8 +103,13 @@ namespace GridFSServer.Middleware
 
             if (_stats.Length != 0)
             {
-                _logger.LogInformation(_stats.ToString());
+                Log(_logger, _stats.ToString(), null);
             }
+        }
+
+        private static class EventIds
+        {
+            public static readonly EventId Statistics = new(1, nameof(Statistics));
         }
     }
 }

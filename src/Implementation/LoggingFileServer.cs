@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,12 @@ namespace GridFSServer.Implementation
 {
     internal sealed class LoggingFileServer : IHttpFileServer
     {
+        private static readonly Action<ILogger, HostString, PathString, IPAddress?, bool, long?, Exception?> LogServed =
+            LoggerMessage.Define<HostString, PathString, IPAddress?, bool, long?>(
+                LogLevel.Information,
+                EventIds.Served,
+                "{Host}{Path} {IpAddress} {Success} {Length}");
+
         private readonly IHttpFileServer _inner;
         private readonly IOptionsMonitor<HttpServerOptions> _options;
         private readonly ILogger _logger;
@@ -39,14 +46,14 @@ namespace GridFSServer.Implementation
                     length = null;
                 }
 
-                _logger.LogInformation(
-                    EventIds.Served,
-                    "{Host}{Path} {IpAddress} {Success} {Length}",
+                LogServed(
+                    _logger,
                     httpContext.Request.Host,
                     httpContext.Request.Path,
-                    httpContext.Features.Get<IHttpConnectionFeature>().RemoteIpAddress,
+                    httpContext.Features.Get<IHttpConnectionFeature>()?.RemoteIpAddress,
                     success,
-                    length);
+                    length,
+                    null);
             }
 
             return success;
@@ -54,7 +61,7 @@ namespace GridFSServer.Implementation
 
         private static class EventIds
         {
-            public static readonly EventId Served = new EventId(1, nameof(Served));
+            public static readonly EventId Served = new(1, nameof(Served));
         }
     }
 }

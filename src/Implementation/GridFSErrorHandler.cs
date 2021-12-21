@@ -10,11 +10,17 @@ namespace GridFSServer.Implementation
 {
     internal sealed class GridFSErrorHandler : IGridFSErrorHandler
     {
+        private static readonly Action<ILogger, string, string, Exception?> LogRetry =
+            LoggerMessage.Define<string, string>(
+                LogLevel.Information,
+                EventIds.Retry,
+                "Retrying after {Action} for file \"{Filename}\"");
+
         private readonly ILogger _logger;
 
         public GridFSErrorHandler(ILogger<GridFSErrorHandler> logger)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<TResult> HandleErrors<TResult>(
@@ -34,24 +40,29 @@ namespace GridFSServer.Implementation
                 }
                 catch (TimeoutException exception) when (tries > 1 && retryValidator())
                 {
-                    _logger?.LogWarning(exception, "Retrying after read timeout for file \"{0}\".", filename);
+                    LogRetry(_logger, "read timeout", filename, exception);
                 }
                 catch (MongoWaitQueueFullException exception)
                 {
-                    _logger?.LogWarning(exception, "Retrying after wait queue exception for file \"{0}\".", filename);
+                    LogRetry(_logger, "wait queue exception", filename, exception);
                 }
                 catch (MongoConnectionException exception) when (tries > 1 && retryValidator())
                 {
-                    _logger?.LogWarning(exception, "Retrying after network error for file \"{0}\".", filename);
+                    LogRetry(_logger, "network error", filename, exception);
                 }
                 catch (MongoCommandException exception) when (tries > 1 && retryValidator())
                 {
-                    _logger?.LogWarning(exception, "Retrying after protocol error for file \"{0}\".", filename);
+                    LogRetry(_logger, "protocol error", filename, exception);
                 }
 
                 --tries;
                 await Task.Delay(DelayBetweenAttemptsMs, cancellationToken);
             }
+        }
+
+        private static class EventIds
+        {
+            public static readonly EventId Retry = new(1, nameof(Retry));
         }
     }
 }
