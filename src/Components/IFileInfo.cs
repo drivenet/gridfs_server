@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GridFSServer.Components
 {
-    internal interface IFileInfo : IDisposable
+    internal interface IFileInfo : IAsyncDisposable
     {
         string Filename { get; }
 

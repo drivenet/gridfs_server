@@ -32,6 +32,6 @@ namespace GridFSServer.Implementation
             return true;
         }
 
-        public void Dispose() => _inner.Dispose();
+        public ValueTask DisposeAsync() => _inner.DisposeAsync();
     }
 }

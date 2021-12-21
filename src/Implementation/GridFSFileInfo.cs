@@ -22,7 +22,7 @@ namespace GridFSServer.Implementation
 
         public string Filename => _stream.FileInfo.Filename;
 
-        public void Dispose() => _stream.Dispose();
+        public ValueTask DisposeAsync() => _stream.DisposeAsync();
 
         public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
         {

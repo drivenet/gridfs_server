@@ -36,7 +36,7 @@ namespace GridFSServer.Implementation
             var request = httpContext.Request;
             var fileSource = _fileSourceResolver.Resolve(request.Host);
             var filename = request.Path.ToString().TrimStart('/');
-            using var fileInfo = await fileSource.FetchFile(filename, cts.Token);
+            await using var fileInfo = await fileSource.FetchFile(filename, cts.Token);
             if (fileInfo is null)
             {
                 return false;
