@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace GridFSServer.Components
+namespace GridFSServer.Components;
+
+internal interface IFileSource
 {
-    internal interface IFileSource
-    {
-        Task<IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken);
-    }
+    Task<IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken);
 }

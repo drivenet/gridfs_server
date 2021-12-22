@@ -2,29 +2,28 @@
 
 using Microsoft.AspNetCore.Http;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal sealed class DefaultGridFSFileSourceResolver : Components.IFileSourceResolver
 {
-    internal sealed class DefaultGridFSFileSourceResolver : Components.IFileSourceResolver
+    private readonly IMongoUrlResolver _urlResolver;
+
+    private readonly IGridFSFileSourceResolver _fileSourceResolver;
+
+    public DefaultGridFSFileSourceResolver(IMongoUrlResolver urlResolver, IGridFSFileSourceResolver fileSourceResolver)
     {
-        private readonly IMongoUrlResolver _urlResolver;
+        _urlResolver = urlResolver ?? throw new ArgumentNullException(nameof(urlResolver));
+        _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
+    }
 
-        private readonly IGridFSFileSourceResolver _fileSourceResolver;
-
-        public DefaultGridFSFileSourceResolver(IMongoUrlResolver urlResolver, IGridFSFileSourceResolver fileSourceResolver)
+    public Components.IFileSource Resolve(HostString host)
+    {
+        var url = _urlResolver.Resolve(host);
+        if (url is null)
         {
-            _urlResolver = urlResolver ?? throw new ArgumentNullException(nameof(urlResolver));
-            _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
+            return EmptyFileSource.Value;
         }
 
-        public Components.IFileSource Resolve(HostString host)
-        {
-            var url = _urlResolver.Resolve(host);
-            if (url is null)
-            {
-                return EmptyFileSource.Value;
-            }
-
-            return _fileSourceResolver.Resolve(url);
-        }
+        return _fileSourceResolver.Resolve(url);
     }
 }

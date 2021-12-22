@@ -7,102 +7,101 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal sealed class HttpFileServer : Components.IHttpFileServer
 {
-    internal sealed class HttpFileServer : Components.IHttpFileServer
+    private readonly Components.IFileSourceResolver _fileSourceResolver;
+
+    private readonly IContentTypeProvider _contentTypeProvider;
+
+    private readonly IOptionsMonitor<Components.HttpServerOptions> _optionsSource;
+
+    public HttpFileServer(Components.IFileSourceResolver fileSourceResolver, IContentTypeProvider contentTypeProvider, IOptionsMonitor<Components.HttpServerOptions> optionsSource)
     {
-        private readonly Components.IFileSourceResolver _fileSourceResolver;
+        _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
+        _contentTypeProvider = contentTypeProvider ?? throw new ArgumentNullException(nameof(contentTypeProvider));
+        _optionsSource = optionsSource ?? throw new ArgumentNullException(nameof(optionsSource));
+    }
 
-        private readonly IContentTypeProvider _contentTypeProvider;
-
-        private readonly IOptionsMonitor<Components.HttpServerOptions> _optionsSource;
-
-        public HttpFileServer(Components.IFileSourceResolver fileSourceResolver, IContentTypeProvider contentTypeProvider, IOptionsMonitor<Components.HttpServerOptions> optionsSource)
+    public async Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken)
+    {
+        if (!CheckMethod(httpContext.Request.Method, out var serveContent))
         {
-            _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
-            _contentTypeProvider = contentTypeProvider ?? throw new ArgumentNullException(nameof(contentTypeProvider));
-            _optionsSource = optionsSource ?? throw new ArgumentNullException(nameof(optionsSource));
-        }
-
-        public async Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken)
-        {
-            if (!CheckMethod(httpContext.Request.Method, out var serveContent))
-            {
-                httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
-                return true;
-            }
-
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, httpContext.RequestAborted);
-            var request = httpContext.Request;
-            var fileSource = _fileSourceResolver.Resolve(request.Host);
-            var filename = request.Path.ToString().TrimStart('/');
-            await using var fileInfo = await fileSource.FetchFile(filename, cts.Token);
-            if (fileInfo is null)
-            {
-                return false;
-            }
-
-            return await ServeFile(httpContext.Response, fileInfo, serveContent, cts.Token);
-        }
-
-        private static bool CheckMethod(string method, out bool serveContent)
-        {
-            switch (method)
-            {
-                case "GET":
-                    serveContent = true;
-                    return true;
-
-                case "HEAD":
-                    serveContent = false;
-                    return true;
-
-                default:
-                    serveContent = false;
-                    return false;
-            }
-        }
-
-        private static async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
-        {
-            var stream = response.Body;
-            if (!await fileInfo.CopyTo(stream, cancellationToken))
-            {
-                if (stream.CanSeek)
-                {
-                    response.Clear();
-                }
-
-                return false;
-            }
-
+            httpContext.Response.StatusCode = StatusCodes.Status501NotImplemented;
             return true;
         }
 
-        private async Task<bool> ServeFile(HttpResponse response, Components.IFileInfo fileInfo, bool serveContent, CancellationToken cancellationToken)
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, httpContext.RequestAborted);
+        var request = httpContext.Request;
+        var fileSource = _fileSourceResolver.Resolve(request.Host);
+        var filename = request.Path.ToString().TrimStart('/');
+        await using var fileInfo = await fileSource.FetchFile(filename, cts.Token);
+        if (fileInfo is null)
         {
-            ServeHeaders(response, fileInfo.Filename);
-            if (!serveContent)
-            {
-                return true;
-            }
-
-            return await ServeBody(response, fileInfo, cancellationToken);
+            return false;
         }
 
-        private void ServeHeaders(HttpResponse response, string filename)
+        return await ServeFile(httpContext.Response, fileInfo, serveContent, cts.Token);
+    }
+
+    private static bool CheckMethod(string method, out bool serveContent)
+    {
+        switch (method)
         {
-            if (_contentTypeProvider.TryGetContentType(filename, out var contentType))
+            case "GET":
+                serveContent = true;
+                return true;
+
+            case "HEAD":
+                serveContent = false;
+                return true;
+
+            default:
+                serveContent = false;
+                return false;
+        }
+    }
+
+    private static async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
+    {
+        var stream = response.Body;
+        if (!await fileInfo.CopyTo(stream, cancellationToken))
+        {
+            if (stream.CanSeek)
             {
-                response.ContentType = contentType;
+                response.Clear();
             }
 
-            var options = _optionsSource.CurrentValue;
-            var cacheControl = options?.CacheControl;
-            if (cacheControl is object)
-            {
-                response.Headers.Add(HeaderNames.CacheControl, cacheControl);
-            }
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> ServeFile(HttpResponse response, Components.IFileInfo fileInfo, bool serveContent, CancellationToken cancellationToken)
+    {
+        ServeHeaders(response, fileInfo.Filename);
+        if (!serveContent)
+        {
+            return true;
+        }
+
+        return await ServeBody(response, fileInfo, cancellationToken);
+    }
+
+    private void ServeHeaders(HttpResponse response, string filename)
+    {
+        if (_contentTypeProvider.TryGetContentType(filename, out var contentType))
+        {
+            response.ContentType = contentType;
+        }
+
+        var options = _optionsSource.CurrentValue;
+        var cacheControl = options?.CacheControl;
+        if (cacheControl is object)
+        {
+            response.Headers.Add(HeaderNames.CacheControl, cacheControl);
         }
     }
 }

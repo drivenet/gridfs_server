@@ -7,35 +7,34 @@ using Microsoft.AspNetCore.Http;
 
 using MongoDB.Driver;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal sealed class TimedCachingMongoUrlResolver : IMongoUrlResolver
 {
-    internal sealed class TimedCachingMongoUrlResolver : IMongoUrlResolver
+    private readonly ConcurrentDictionary<HostString, MongoUrl?> _cache = new();
+
+    private readonly Func<HostString, MongoUrl?> _resolver;
+
+    private long _nextTime;
+
+    public TimedCachingMongoUrlResolver(IMongoUrlResolver inner)
     {
-        private readonly ConcurrentDictionary<HostString, MongoUrl?> _cache = new ConcurrentDictionary<HostString, MongoUrl?>();
+        _resolver = (inner ?? throw new ArgumentNullException(nameof(inner))).Resolve;
+    }
 
-        private readonly Func<HostString, MongoUrl?> _resolver;
-
-        private long _nextTime;
-
-        public TimedCachingMongoUrlResolver(IMongoUrlResolver inner)
+    public MongoUrl? Resolve(HostString host)
+    {
+        var time = Stopwatch.GetTimestamp();
+        var nextTime = _nextTime;
+        if (time > nextTime)
         {
-            _resolver = (inner ?? throw new ArgumentNullException(nameof(inner))).Resolve;
-        }
-
-        public MongoUrl? Resolve(HostString host)
-        {
-            var time = Stopwatch.GetTimestamp();
-            var nextTime = _nextTime;
-            if (time > nextTime)
+            time += Stopwatch.Frequency;
+            if (Interlocked.CompareExchange(ref _nextTime, time, nextTime) == nextTime)
             {
-                time += Stopwatch.Frequency;
-                if (Interlocked.CompareExchange(ref _nextTime, time, nextTime) == nextTime)
-                {
-                    _cache.Clear();
-                }
+                _cache.Clear();
             }
-
-            return _cache.GetOrAdd(host, _resolver);
         }
+
+        return _cache.GetOrAdd(host, _resolver);
     }
 }

@@ -2,10 +2,9 @@
 
 using MongoDB.Driver;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal interface IMongoUrlResolver
 {
-    internal interface IMongoUrlResolver
-    {
-        MongoUrl? Resolve(HostString host);
-    }
+    MongoUrl? Resolve(HostString host);
 }

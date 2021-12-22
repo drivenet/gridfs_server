@@ -1,10 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal interface IGridFSFileSourceFactory
 {
-    internal interface IGridFSFileSourceFactory
-    {
-        Components.IFileSource Create(IGridFSBucket<BsonValue> bucket);
-    }
+    Components.IFileSource Create(IGridFSBucket<BsonValue> bucket);
 }

@@ -5,26 +5,25 @@ using Microsoft.Extensions.Configuration;
 
 using MongoDB.Driver;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal sealed class ConfigBasedMongoUrlResolver : IMongoUrlResolver
 {
-    internal sealed class ConfigBasedMongoUrlResolver : IMongoUrlResolver
+    private readonly IConfiguration _configuration;
+
+    public ConfigBasedMongoUrlResolver(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
 
-        public ConfigBasedMongoUrlResolver(IConfiguration configuration)
+    public MongoUrl? Resolve(HostString host)
+    {
+        var connectionString = _configuration.GetConnectionString(host.ToString());
+        if (connectionString is null)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            return null;
         }
 
-        public MongoUrl? Resolve(HostString host)
-        {
-            var connectionString = _configuration.GetConnectionString(host.ToString());
-            if (connectionString is null)
-            {
-                return null;
-            }
-
-            return new MongoUrl(connectionString);
-        }
+        return new MongoUrl(connectionString);
     }
 }

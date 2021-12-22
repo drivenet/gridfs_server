@@ -4,29 +4,28 @@ using System.Threading.Tasks;
 
 using Microsoft.IO;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal sealed class BufferingFileSource : Components.IFileSource
 {
-    internal sealed class BufferingFileSource : Components.IFileSource
+    private readonly Components.IFileSource _inner;
+    private readonly RecyclableMemoryStreamManager _streamManager;
+
+    public BufferingFileSource(Components.IFileSource inner, RecyclableMemoryStreamManager streamManager)
     {
-        private readonly Components.IFileSource _inner;
-        private readonly RecyclableMemoryStreamManager _streamManager;
+        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+        _streamManager = streamManager ?? throw new ArgumentNullException(nameof(streamManager));
+    }
 
-        public BufferingFileSource(Components.IFileSource inner, RecyclableMemoryStreamManager streamManager)
+    public async Task<Components.IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken)
+    {
+        var fileInfo = await _inner.FetchFile(filename, cancellationToken);
+        if (fileInfo is null)
         {
-            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-            _streamManager = streamManager ?? throw new ArgumentNullException(nameof(streamManager));
+            return null;
         }
 
-        public async Task<Components.IFileInfo?> FetchFile(string filename, CancellationToken cancellationToken)
-        {
-            var fileInfo = await _inner.FetchFile(filename, cancellationToken);
-            if (fileInfo is null)
-            {
-                return null;
-            }
-
-            fileInfo = new BufferingFileInfo(fileInfo, _streamManager);
-            return fileInfo;
-        }
+        fileInfo = new BufferingFileInfo(fileInfo, _streamManager);
+        return fileInfo;
     }
 }

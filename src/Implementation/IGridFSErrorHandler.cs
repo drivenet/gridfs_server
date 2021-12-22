@@ -2,14 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal interface IGridFSErrorHandler
 {
-    internal interface IGridFSErrorHandler
-    {
-        Task<TResult> HandleErrors<TResult>(
-            Func<Task<TResult>> action,
-            string filename,
-            Func<bool> retryValidator,
-            CancellationToken cancellationToken);
-    }
+    Task<TResult> HandleErrors<TResult>(
+        Func<Task<TResult>> action,
+        string filename,
+        Func<bool> retryValidator,
+        CancellationToken cancellationToken);
 }

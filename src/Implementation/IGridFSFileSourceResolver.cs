@@ -1,9 +1,8 @@
 ﻿using MongoDB.Driver;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal interface IGridFSFileSourceResolver
 {
-    internal interface IGridFSFileSourceResolver
-    {
-        Components.IFileSource Resolve(MongoUrl url);
-    }
+    Components.IFileSource Resolve(MongoUrl url);
 }

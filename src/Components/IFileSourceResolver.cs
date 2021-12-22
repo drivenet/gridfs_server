@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace GridFSServer.Components
+namespace GridFSServer.Components;
+
+internal interface IFileSourceResolver
 {
-    internal interface IFileSourceResolver
-    {
-        IFileSource Resolve(HostString host);
-    }
+    IFileSource Resolve(HostString host);
 }

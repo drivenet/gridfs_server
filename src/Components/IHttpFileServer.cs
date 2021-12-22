@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 
-namespace GridFSServer.Components
+namespace GridFSServer.Components;
+
+internal interface IHttpFileServer
 {
-    internal interface IHttpFileServer
-    {
-        Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken);
-    }
+    Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken);
 }

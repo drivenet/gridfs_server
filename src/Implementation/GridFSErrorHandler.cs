@@ -6,63 +6,62 @@ using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
 
-namespace GridFSServer.Implementation
+namespace GridFSServer.Implementation;
+
+internal sealed class GridFSErrorHandler : IGridFSErrorHandler
 {
-    internal sealed class GridFSErrorHandler : IGridFSErrorHandler
+    private static readonly Action<ILogger, string, string, Exception?> LogRetry =
+        LoggerMessage.Define<string, string>(
+            LogLevel.Information,
+            EventIds.Retry,
+            "Retrying after {Action} for file \"{Filename}\"");
+
+    private readonly ILogger _logger;
+
+    public GridFSErrorHandler(ILogger<GridFSErrorHandler> logger)
     {
-        private static readonly Action<ILogger, string, string, Exception?> LogRetry =
-            LoggerMessage.Define<string, string>(
-                LogLevel.Information,
-                EventIds.Retry,
-                "Retrying after {Action} for file \"{Filename}\"");
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        private readonly ILogger _logger;
-
-        public GridFSErrorHandler(ILogger<GridFSErrorHandler> logger)
+    public async Task<TResult> HandleErrors<TResult>(
+        Func<Task<TResult>> action,
+        string filename,
+        Func<bool> retryValidator,
+        CancellationToken cancellationToken)
+    {
+        const int Attempts = 4;
+        const int DelayBetweenAttemptsMs = 1500;
+        var tries = Attempts;
+        while (true)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-        public async Task<TResult> HandleErrors<TResult>(
-            Func<Task<TResult>> action,
-            string filename,
-            Func<bool> retryValidator,
-            CancellationToken cancellationToken)
-        {
-            const int Attempts = 4;
-            const int DelayBetweenAttemptsMs = 1500;
-            var tries = Attempts;
-            while (true)
+            try
             {
-                try
-                {
-                    return await action();
-                }
-                catch (TimeoutException exception) when (tries > 1 && retryValidator())
-                {
-                    LogRetry(_logger, "read timeout", filename, exception);
-                }
-                catch (MongoWaitQueueFullException exception)
-                {
-                    LogRetry(_logger, "wait queue exception", filename, exception);
-                }
-                catch (MongoConnectionException exception) when (tries > 1 && retryValidator())
-                {
-                    LogRetry(_logger, "network error", filename, exception);
-                }
-                catch (MongoCommandException exception) when (tries > 1 && retryValidator())
-                {
-                    LogRetry(_logger, "protocol error", filename, exception);
-                }
-
-                --tries;
-                await Task.Delay(DelayBetweenAttemptsMs, cancellationToken);
+                return await action();
             }
-        }
+            catch (TimeoutException exception) when (tries > 1 && retryValidator())
+            {
+                LogRetry(_logger, "read timeout", filename, exception);
+            }
+            catch (MongoWaitQueueFullException exception)
+            {
+                LogRetry(_logger, "wait queue exception", filename, exception);
+            }
+            catch (MongoConnectionException exception) when (tries > 1 && retryValidator())
+            {
+                LogRetry(_logger, "network error", filename, exception);
+            }
+            catch (MongoCommandException exception) when (tries > 1 && retryValidator())
+            {
+                LogRetry(_logger, "protocol error", filename, exception);
+            }
 
-        private static class EventIds
-        {
-            public static readonly EventId Retry = new(1, nameof(Retry));
+            --tries;
+            await Task.Delay(DelayBetweenAttemptsMs, cancellationToken);
         }
+    }
+
+    private static class EventIds
+    {
+        public static readonly EventId Retry = new(1, nameof(Retry));
     }
 }
