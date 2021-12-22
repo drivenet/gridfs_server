@@ -28,6 +28,7 @@ internal sealed class BufferingFileInfo : Components.IFileInfo
             return false;
         }
 
+        buffer.Position = 0;
         await buffer.CopyToAsync(stream, cancellationToken);
         return true;
     }
