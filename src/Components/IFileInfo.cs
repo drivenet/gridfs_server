@@ -9,5 +9,7 @@ internal interface IFileInfo : IAsyncDisposable
 {
     string Filename { get; }
 
+    long Length { get; }
+
     Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken);
 }

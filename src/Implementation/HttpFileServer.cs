@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
+using Microsoft.IO;
 using Microsoft.Net.Http.Headers;
 
 namespace GridFSServer.Implementation;
@@ -12,16 +13,20 @@ namespace GridFSServer.Implementation;
 internal sealed class HttpFileServer : Components.IHttpFileServer
 {
     private readonly Components.IFileSourceResolver _fileSourceResolver;
-
     private readonly IContentTypeProvider _contentTypeProvider;
-
     private readonly IOptionsMonitor<Components.HttpServerOptions> _optionsSource;
+    private readonly RecyclableMemoryStreamManager _streamManager;
 
-    public HttpFileServer(Components.IFileSourceResolver fileSourceResolver, IContentTypeProvider contentTypeProvider, IOptionsMonitor<Components.HttpServerOptions> optionsSource)
+    public HttpFileServer(
+        Components.IFileSourceResolver fileSourceResolver,
+        IContentTypeProvider contentTypeProvider,
+        IOptionsMonitor<Components.HttpServerOptions> optionsSource,
+        RecyclableMemoryStreamManager streamManager)
     {
         _fileSourceResolver = fileSourceResolver ?? throw new ArgumentNullException(nameof(fileSourceResolver));
         _contentTypeProvider = contentTypeProvider ?? throw new ArgumentNullException(nameof(contentTypeProvider));
         _optionsSource = optionsSource ?? throw new ArgumentNullException(nameof(optionsSource));
+        _streamManager = streamManager ?? throw new ArgumentNullException(nameof(streamManager));
     }
 
     public async Task<bool> TryServeFile(HttpContext httpContext, CancellationToken cancellationToken)
@@ -63,19 +68,24 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
         }
     }
 
-    private static async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
+    private async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
     {
-        var stream = response.Body;
-        if (!await fileInfo.CopyTo(stream, cancellationToken))
+        var length = fileInfo.Length;
+        const int MaxBuffered = 16 << 20;
+        if (length > MaxBuffered)
         {
-            if (stream.CanSeek)
-            {
-                response.Clear();
-            }
+            return await fileInfo.CopyTo(response.Body, cancellationToken);
+        }
 
+        await using var buffer = _streamManager.GetStream();
+        if (!await fileInfo.CopyTo(buffer, cancellationToken))
+        {
             return false;
         }
 
+        var data = buffer.GetBuffer().AsMemory(0, (int)length);
+        response.ContentLength = length;
+        await response.BodyWriter.WriteAsync(data, cancellationToken);
         return true;
     }
 

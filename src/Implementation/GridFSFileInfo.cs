@@ -22,6 +22,8 @@ internal sealed class GridFSFileInfo : Components.IFileInfo
 
     public string Filename => _stream.FileInfo.Filename;
 
+    public long Length => _stream.Length;
+
     public ValueTask DisposeAsync() => _stream.DisposeAsync();
 
     public Task<bool> CopyTo(Stream stream, CancellationToken cancellationToken)
