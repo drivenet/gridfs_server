@@ -68,11 +68,10 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
         }
     }
 
-    private async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, CancellationToken cancellationToken)
+    private async Task<bool> ServeBody(HttpResponse response, Components.IFileInfo fileInfo, Components.HttpServerOptions options, CancellationToken cancellationToken)
     {
         var length = fileInfo.Length;
-        const int MaxBuffered = 16 << 20;
-        if (length > MaxBuffered)
+        if (length > options.MaxBufferedLength)
         {
             return await fileInfo.CopyTo(response.Body, cancellationToken);
         }
@@ -94,25 +93,24 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
 
     private async Task<bool> ServeFile(HttpResponse response, Components.IFileInfo fileInfo, bool serveContent, CancellationToken cancellationToken)
     {
-        ServeHeaders(response, fileInfo.Filename);
+        var options = _optionsSource.CurrentValue;
+        ServeHeaders(response, fileInfo.Filename, options);
         if (!serveContent)
         {
             return true;
         }
 
-        return await ServeBody(response, fileInfo, cancellationToken);
+        return await ServeBody(response, fileInfo, options, cancellationToken);
     }
 
-    private void ServeHeaders(HttpResponse response, string filename)
+    private void ServeHeaders(HttpResponse response, string filename, Components.HttpServerOptions options)
     {
         if (_contentTypeProvider.TryGetContentType(filename, out var contentType))
         {
             response.ContentType = contentType;
         }
 
-        var options = _optionsSource.CurrentValue;
-        var cacheControl = options?.CacheControl;
-        if (cacheControl is object)
+        if (options.CacheControl is { } cacheControl)
         {
             response.Headers.Add(HeaderNames.CacheControl, cacheControl);
         }
