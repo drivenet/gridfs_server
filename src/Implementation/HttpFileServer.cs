@@ -77,15 +77,18 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
             return await fileInfo.CopyTo(response.Body, cancellationToken);
         }
 
-        await using var buffer = _streamManager.GetStream();
+        await using var buffer = (RecyclableMemoryStream)_streamManager.GetStream();
         if (!await fileInfo.CopyTo(buffer, cancellationToken))
         {
             return false;
         }
 
-        var data = buffer.GetBuffer().AsMemory(0, (int)length);
         response.ContentLength = length;
-        await response.BodyWriter.WriteAsync(data, cancellationToken);
+        foreach (var segment in buffer.GetReadOnlySequence())
+        {
+            await response.BodyWriter.WriteAsync(segment, cancellationToken);
+        }
+
         return true;
     }
 
