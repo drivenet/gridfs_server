@@ -97,6 +97,7 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
         ServeHeaders(response, fileInfo.Filename, options);
         if (!serveContent)
         {
+            response.Headers.ContentLength = fileInfo.Length;
             return true;
         }
 
