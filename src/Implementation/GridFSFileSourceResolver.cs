@@ -13,8 +13,8 @@ internal sealed class GridFSFileSourceResolver : IGridFSFileSourceResolver
     private static readonly IEnumerable<ReadPreference> ReadPreferences =
         new[]
         {
-                ReadPreference.Nearest,
-                ReadPreference.PrimaryPreferred,
+            ReadPreference.Nearest,
+            ReadPreference.PrimaryPreferred,
         };
 
     private readonly IGridFSFileSourceFactory _fileSourceFactory;
