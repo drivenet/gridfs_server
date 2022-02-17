@@ -9,6 +9,7 @@
     <Product>GridFS server</Product>
     <Version>1.14.2</Version>
     <NoWarn>$(NoWarn);CA2007</NoWarn>
+    <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
   
   <ItemGroup>
