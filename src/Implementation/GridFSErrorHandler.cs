@@ -29,16 +29,21 @@ internal sealed class GridFSErrorHandler : IGridFSErrorHandler
         Func<bool> retryValidator,
         CancellationToken cancellationToken)
     {
-        const int Attempts = 4;
+        const int Attempts = 5;
         const int DelayBetweenAttemptsMs = 1500;
         var tries = Attempts;
         while (true)
         {
+            if (tries <= 1)
+            {
+                return await action();
+            }
+
             try
             {
                 return await action();
             }
-            catch (TimeoutException exception) when (tries > 1 && retryValidator())
+            catch (TimeoutException exception)
             {
                 LogRetry(_logger, "read timeout", filename, exception);
             }
@@ -46,11 +51,19 @@ internal sealed class GridFSErrorHandler : IGridFSErrorHandler
             {
                 LogRetry(_logger, "wait queue exception", filename, exception);
             }
-            catch (MongoConnectionException exception) when (tries > 1 && retryValidator())
+            catch (MongoConnectionPoolPausedException exception)
+            {
+                LogRetry(_logger, "connection pool paused", filename, exception);
+            }
+            catch (MongoNodeIsRecoveringException exception)
+            {
+                LogRetry(_logger, "node is recovering", filename, exception);
+            }
+            catch (MongoConnectionException exception) when (retryValidator())
             {
                 LogRetry(_logger, "network error", filename, exception);
             }
-            catch (MongoCommandException exception) when (tries > 1 && retryValidator())
+            catch (MongoCommandException exception) when (retryValidator())
             {
                 LogRetry(_logger, "protocol error", filename, exception);
             }
