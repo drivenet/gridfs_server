@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
-    <Version>1.14.4</Version>
+    <Version>1.14.5</Version>
     <NoWarn>$(NoWarn);CA2007</NoWarn>
     <ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
