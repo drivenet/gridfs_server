@@ -55,6 +55,11 @@ public static class Program
             (category, level) => level >= LogLevel.Warning
                 || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
 
+        loggingBuilder.Configure(options =>
+        {
+            options.ActivityTrackingOptions = ActivityTrackingOptions.TraceId;
+        });
+
 #if !MINIMAL_BUILD
         if (Journal.IsSupported)
         {
