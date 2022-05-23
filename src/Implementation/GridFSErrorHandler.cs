@@ -30,7 +30,7 @@ internal sealed class GridFSErrorHandler : IGridFSErrorHandler
         CancellationToken cancellationToken)
     {
         const int Attempts = 5;
-        const int DelayBetweenAttemptsMs = 2500;
+        const int DelayBetweenAttemptsMs = 1500;
         var tries = Attempts;
         while (true)
         {
