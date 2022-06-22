@@ -7,5 +7,5 @@
 obj/
 bin/
 packages/
-Properties/launchSettings.json
+**/Properties/launchSettings.json
 
