@@ -76,7 +76,7 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
             return await fileInfo.CopyTo(response.Body, cancellationToken);
         }
 
-        await using var buffer = (RecyclableMemoryStream)_streamManager.GetStream();
+        await using var buffer = _streamManager.GetStream();
         if (!await fileInfo.CopyTo(buffer, cancellationToken))
         {
             return false;
