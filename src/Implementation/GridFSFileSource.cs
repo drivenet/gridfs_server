@@ -52,17 +52,17 @@ internal sealed class GridFSFileSource : Components.IFileSource
             return null;
         }
 
-        return new GridFSFileInfo(stream, _errorHandler);
+        return new GridFSFileInfo(
+            stream,
+            token => FetchStream(filename, token),
+            _errorHandler);
     }
 
     private async Task<GridFSDownloadStream<BsonValue>?> FetchStream(string filename, CancellationToken cancellationToken)
     {
         try
         {
-            return await _bucket.OpenDownloadStreamByNameAsync(
-                filename,
-                new GridFSDownloadByNameOptions { Seekable = true },
-                cancellationToken);
+            return await _bucket.OpenDownloadStreamByNameAsync(filename, cancellationToken: cancellationToken);
         }
         catch (GridFSFileNotFoundException)
         {
