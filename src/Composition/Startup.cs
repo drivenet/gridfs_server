@@ -24,6 +24,9 @@ internal sealed class Startup
         MongoDB.Bson.BsonDefaults.GuidRepresentationMode = MongoDB.Bson.GuidRepresentationMode.V3;
 #pragma warning restore CS0618 // Type or member is obsolete
 
+#pragma warning disable RS0030 // Do not use banned APIs -- required for DI
+        services.AddSingleton(TimeProvider.System);
+#pragma warning restore RS0030 // Do not use banned APIs
         services.AddSingleton<Microsoft.IO.RecyclableMemoryStreamManager>();
 
         services.Configure<Components.HttpServerOptions>(_configuration.GetSection("httpServer"));

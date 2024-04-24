@@ -23,9 +23,8 @@ internal sealed class ReverseProxyMiddleware : IMiddleware
 
     private static void UpdateRemoteIpAddress(HttpContext context)
     {
-        if (context.Request.Headers.TryGetValue("X-Real-IP", out var header)
-            && header.Count == 1
-            && IPAddress.TryParse(header[0], out var address)
+        if (context.Request.Headers["X-Real-IP"] is [string header]
+            && IPAddress.TryParse(header, out var address)
             && (address.AddressFamily == AddressFamily.InterNetwork || address.AddressFamily == AddressFamily.InterNetworkV6))
         {
             var connection = context.Connection;
@@ -36,9 +35,8 @@ internal sealed class ReverseProxyMiddleware : IMiddleware
 
     private static void UpdateServerPort(HttpContext context)
     {
-        if (context.Request.Headers.TryGetValue("X-Forwarded-Port", out var header)
-            && header.Count == 1
-            && ushort.TryParse(header[0], NumberStyles.None, NumberFormatInfo.InvariantInfo, out var port)
+        if (context.Request.Headers["X-Forwarded-Port"] is [string header]
+            && ushort.TryParse(header, NumberStyles.None, NumberFormatInfo.InvariantInfo, out var port)
             && port != 0)
         {
             var connection = context.Connection;
@@ -50,10 +48,9 @@ internal sealed class ReverseProxyMiddleware : IMiddleware
     private static void UpdateScheme(HttpContext context)
     {
         var request = context.Request;
-        if (request.Headers.TryGetValue("X-Forwarded-Proto", out var header)
-            && header.Count == 1)
+        if (request.Headers["X-Forwarded-Proto"] is [string header])
         {
-            switch (header[0])
+            switch (header)
             {
                 case "http":
                     request.Scheme = Uri.UriSchemeHttp;
@@ -68,16 +65,14 @@ internal sealed class ReverseProxyMiddleware : IMiddleware
 
     private static void UpdateConnectionId(HttpContext context)
     {
-        string value;
-        if (context.Request.Headers.TryGetValue("X-Connection-ID", out var header)
-            && header.Count == 1
-            && !string.IsNullOrWhiteSpace(value = header[0]))
+        if (context.Request.Headers["X-Connection-ID"] is [string header]
+            && !string.IsNullOrWhiteSpace(header))
         {
             var connection = context.Connection;
             var id = connection.Id;
             if (!string.IsNullOrWhiteSpace(id))
             {
-                id = value + ":" + id;
+                id = header + ":" + id;
             }
 
             connection.Id = id;
@@ -86,12 +81,10 @@ internal sealed class ReverseProxyMiddleware : IMiddleware
 
     private static void UpdateRequestId(HttpContext context)
     {
-        string value;
-        if (context.Request.Headers.TryGetValue("X-Request-ID", out var header)
-            && header.Count == 1
-            && !string.IsNullOrWhiteSpace(value = header[0]))
+        if (context.Request.Headers["X-Request-ID"] is [string header]
+            && !string.IsNullOrWhiteSpace(header))
         {
-            context.TraceIdentifier = value;
+            context.TraceIdentifier = header;
         }
     }
 }

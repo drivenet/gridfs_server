@@ -53,7 +53,7 @@ public static class Program
     {
         loggingBuilder.AddFilter(
             (category, level) => level >= LogLevel.Warning
-                || (level >= LogLevel.Information && !category.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase)));
+                || (level >= LogLevel.Information && category?.StartsWith("Microsoft.AspNetCore.", StringComparison.OrdinalIgnoreCase) != true));
 
         loggingBuilder.Configure(options =>
         {
@@ -115,6 +115,6 @@ public static class Program
 
     private static IConfigurationBuilder ConfigureAppConfiguration(string[] args, HostBuilderContext builderContext, IConfigurationBuilder configBuilder)
         => configBuilder
-            .AddJsonFile(builderContext.Configuration.GetValue("ConfigPath", "appsettings.json"), optional: false, reloadOnChange: true)
+            .AddJsonFile(builderContext.Configuration.GetValue<string>("ConfigPath") ?? "appsettings.json", optional: false, reloadOnChange: true)
             .AddCommandLine(args);
 }

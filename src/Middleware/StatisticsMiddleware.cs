@@ -24,12 +24,17 @@ internal sealed class StatisticsMiddleware : IMiddleware, IDisposable
     private readonly int[] _counts = new int[CodeRange];
     private readonly StringBuilder _stats = new();
     private readonly ILogger<StatisticsMiddleware> _logger;
-    private readonly Timer _timer;
+    private readonly ITimer _timer;
 
-    public StatisticsMiddleware(ILogger<StatisticsMiddleware> logger)
+    public StatisticsMiddleware(ILogger<StatisticsMiddleware> logger, TimeProvider timeProvider)
     {
+        if (timeProvider is null)
+        {
+            throw new ArgumentNullException(nameof(timeProvider));
+        }
+
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _timer = new Timer(LogStatistics, null, TraceInterval, TraceInterval);
+        _timer = timeProvider.CreateTimer(LogStatistics, null, TraceInterval, TraceInterval);
     }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -56,9 +61,7 @@ internal sealed class StatisticsMiddleware : IMiddleware, IDisposable
         var lockTaken = false;
         try
         {
-#pragma warning disable CA2002 // Do not lock on objects with weak identity -- local-only immutable object
             Monitor.TryEnter(_timer, ref lockTaken);
-#pragma warning restore CA2002 // Do not lock on objects with weak identity
             if (lockTaken)
             {
                 LogStatistics();

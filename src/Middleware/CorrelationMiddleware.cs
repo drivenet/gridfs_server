@@ -11,7 +11,7 @@ internal sealed class CorrelationMiddleware : IMiddleware
         var requestId = context.TraceIdentifier;
         if (!string.IsNullOrWhiteSpace(requestId))
         {
-            context.Response.Headers.Add("X-Request-ID", requestId);
+            context.Response.Headers["X-Request-ID"] = requestId;
         }
 
         await next(context);

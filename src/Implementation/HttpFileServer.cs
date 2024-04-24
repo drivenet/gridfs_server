@@ -113,7 +113,7 @@ internal sealed class HttpFileServer : Components.IHttpFileServer
 
         if (options.CacheControl is { } cacheControl)
         {
-            response.Headers.Add(HeaderNames.CacheControl, cacheControl);
+            response.Headers[HeaderNames.CacheControl] = cacheControl;
         }
     }
 }
