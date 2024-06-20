@@ -34,10 +34,10 @@ internal sealed class Startup
         services.AddSingleton<Implementation.IGridFSErrorHandler, Implementation.GridFSErrorHandler>();
         services.AddSingleton<Implementation.ConfigBasedMongoUrlResolver>();
         services.AddSingleton<Implementation.IMongoUrlResolver>(provider =>
-            new Implementation.TimedCachingMongoUrlResolver(provider.GetRequiredService<Implementation.ConfigBasedMongoUrlResolver>()));
+            new Implementation.TimedCachingMongoUrlResolver(provider.GetRequiredService<Implementation.ConfigBasedMongoUrlResolver>(), provider.GetRequiredService<TimeProvider>()));
         services.AddSingleton<Implementation.GridFSFileSourceResolver>();
         services.AddSingleton<Implementation.IGridFSFileSourceResolver>(provider =>
-            new Implementation.CachingGridFSFileSourceResolver(provider.GetRequiredService<Implementation.GridFSFileSourceResolver>()));
+            new Implementation.CachingGridFSFileSourceResolver(provider.GetRequiredService<Implementation.GridFSFileSourceResolver>(), provider.GetRequiredService<TimeProvider>()));
         services.AddSingleton<Implementation.DefaultGridFSFileSourceResolver>();
         services.AddSingleton<Components.IFileSourceResolver>(provider =>
             provider.GetRequiredService<Implementation.DefaultGridFSFileSourceResolver>());

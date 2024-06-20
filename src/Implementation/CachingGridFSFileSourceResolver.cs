@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Threading;
 
 using MongoDB.Driver;
@@ -11,26 +10,29 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
 {
     private readonly ConcurrentDictionary<MongoUrl, CacheEntry> _cache = new();
 
+    private readonly TimeProvider _timeProvider;
+
     private readonly IGridFSFileSourceResolver _inner;
 
     private readonly Func<MongoUrl, CacheEntry> _cacheFactory;
 
     private long _nextTime;
 
-    public CachingGridFSFileSourceResolver(IGridFSFileSourceResolver inner)
+    public CachingGridFSFileSourceResolver(IGridFSFileSourceResolver inner, TimeProvider timeProvider)
     {
         _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _cacheFactory = CreateEntry;
     }
 
     public Components.IFileSource Resolve(MongoUrl url)
     {
-        var time = Stopwatch.GetTimestamp();
+        var time = _timeProvider.GetTimestamp();
         var nextTime = _nextTime;
         if (time > nextTime)
         {
             const int CacheCleanIntervalSeconds = 59;
-            time += Stopwatch.Frequency * CacheCleanIntervalSeconds;
+            time += _timeProvider.TimestampFrequency * CacheCleanIntervalSeconds;
             if (Interlocked.CompareExchange(ref _nextTime, time, nextTime) == nextTime)
             {
                 CleanCache(url);
