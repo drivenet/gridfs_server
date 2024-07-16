@@ -473,6 +473,7 @@ dotnet_diagnostic.xUnit1000.severity = error
 dotnet_diagnostic.xUnit1004.severity = none
 dotnet_diagnostic.xUnit1019.severity = error
 dotnet_diagnostic.xUnit1026.severity = suggestion
+dotnet_diagnostic.xUnit1037.severity = none
 dotnet_diagnostic.xUnit1042.severity = suggestion
 
 # Roslyn rules
