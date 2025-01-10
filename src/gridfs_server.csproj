@@ -8,6 +8,7 @@
     <RootNamespace>GridFSServer</RootNamespace>
     <Product>GridFS server</Product>
     <Version>1.16.5</Version>
+    <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
   </PropertyGroup>
   
   <ItemGroup>
