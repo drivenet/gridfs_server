@@ -20,10 +20,6 @@ internal sealed class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-#pragma warning disable CS0618 // Type or member is obsolete -- required for migration to new driver version
-        MongoDB.Bson.BsonDefaults.GuidRepresentationMode = MongoDB.Bson.GuidRepresentationMode.V3;
-#pragma warning restore CS0618 // Type or member is obsolete
-
 #pragma warning disable RS0030 // Do not use banned APIs -- required for DI
         services.AddSingleton(TimeProvider.System);
 #pragma warning restore RS0030 // Do not use banned APIs
