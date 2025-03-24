@@ -60,7 +60,7 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
     {
         private readonly Lazy<Components.IFileSource> _value;
 
-        private bool _hasRefs;
+        private volatile int _hasRefs;
 
         public CacheEntry(Func<Components.IFileSource> valueFactory)
         {
@@ -71,20 +71,12 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
         {
             get
             {
-                _hasRefs = true;
-                return _value.Value;
+                var value = _value.Value;
+                _hasRefs = 1;
+                return value;
             }
         }
 
-        public bool ResetRefs()
-        {
-            if (_hasRefs)
-            {
-                _hasRefs = false;
-                return false;
-            }
-
-            return true;
-        }
+        public bool ResetRefs() => Interlocked.CompareExchange(ref _hasRefs, 0, 1) == 0;
     }
 }
