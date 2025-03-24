@@ -6,7 +6,7 @@ using MongoDB.Driver;
 
 namespace GridFSServer.Implementation;
 
-internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolver
+internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolver, IDisposable
 {
     private readonly ConcurrentDictionary<MongoUrl, CacheEntry> _cache = new();
 
@@ -48,8 +48,19 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
         {
             if (pair.Key != key && pair.Value.ResetRefs())
             {
-                _cache.TryRemove(pair.Key, out _);
+                if (_cache.TryRemove(pair.Key, out var entry))
+                {
+                    entry.Dispose();
+                }
             }
+        }
+    }
+
+    void IDisposable.Dispose()
+    {
+        foreach (var pair in _cache)
+        {
+            pair.Value.Dispose();
         }
     }
 
@@ -78,5 +89,14 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
         }
 
         public bool ResetRefs() => Interlocked.CompareExchange(ref _hasRefs, 0, 1) == 0;
+
+        public void Dispose()
+        {
+            if (_value.IsValueCreated
+                && _value.Value is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        }
     }
 }
