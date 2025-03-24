@@ -31,6 +31,6 @@ internal sealed class GridFSFileSourceResolver : IGridFSFileSourceResolver
         var servers = ReadPreferences
             .Select(readPreference => _fileSourceFactory.Create(new GridFSBucket<BsonValue>(database.WithReadPreference(readPreference))))
             .ToArray();
-        return new CompositeFileSource(servers);
+        return new DisposingFileSource(new CompositeFileSource(servers), client);
     }
 }
