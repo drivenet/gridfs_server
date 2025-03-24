@@ -42,6 +42,14 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
         return _cache.GetOrAdd(url, _cacheFactory).Value;
     }
 
+    void IDisposable.Dispose()
+    {
+        foreach (var pair in _cache)
+        {
+            pair.Value.Dispose();
+        }
+    }
+
     private void CleanCache(MongoUrl key)
     {
         foreach (var pair in _cache)
@@ -53,14 +61,6 @@ internal sealed class CachingGridFSFileSourceResolver : IGridFSFileSourceResolve
                     entry.Dispose();
                 }
             }
-        }
-    }
-
-    void IDisposable.Dispose()
-    {
-        foreach (var pair in _cache)
-        {
-            pair.Value.Dispose();
         }
     }
 
