@@ -12,7 +12,7 @@ internal sealed class HttpServerOptions
         set
         {
             var cacheControl = value?.Trim();
-            if (cacheControl is object && cacheControl.Length == 0)
+            if (cacheControl?.Length == 0)
             {
                 cacheControl = null;
             }
