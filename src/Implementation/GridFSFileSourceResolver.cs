@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,9 +28,21 @@ internal sealed class GridFSFileSourceResolver : IGridFSFileSourceResolver
     {
         var client = new MongoClient(url);
         var database = client.GetDatabase(url.DatabaseName);
-        var servers = ReadPreferences
-            .Select(readPreference => _fileSourceFactory.Create(new GridFSBucket<BsonValue>(database.WithReadPreference(readPreference))))
-            .ToArray();
-        return new DisposingFileSource(new CompositeFileSource(servers), client);
+        Components.IFileSource fileSource;
+        if (url.ReadPreference is null)
+        {
+            var servers = ReadPreferences
+                .Select(readPreference => CreateFileSource(database.WithReadPreference(readPreference)))
+                .ToArray();
+            fileSource = new CompositeFileSource(servers);
+        }
+        else
+        {
+            fileSource = CreateFileSource(database);
+        }
+
+        return new DisposingFileSource(fileSource, client);
     }
+
+    private Components.IFileSource CreateFileSource(IMongoDatabase database) => _fileSourceFactory.Create(new GridFSBucket<BsonValue>(database));
 }
